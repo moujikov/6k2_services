@@ -1,0 +1,12 @@
+name: 6k2-services
+
+services:
+  oss-2021:
+    container_name: oss-2021
+    image: moujikov/6k2_oss-2021
+    restart: unless-stopped
+    
+  oss-2023:
+    container_name: oss-2023
+    image: moujikov/6k2_oss-2023
+    restart: unless-stopped
