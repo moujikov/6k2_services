@@ -17,7 +17,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.dashboard.rule=Host(`traefik.6k2.ru`)"
       - "traefik.http.routers.dashboard.service=api@internal"
-      - "traefik.http.routers.dashboard.middlewares=admin_auth"
+      - "traefik.http.routers.dashboard.middlewares=admin_auth@file"
     secrets:
       - admins
 
