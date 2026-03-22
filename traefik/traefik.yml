@@ -19,11 +19,7 @@ entryPoints:
     http:
       tls:
         certResolver: letsencrypt
-      middlewares:
-        admin_auth:
-          basicAuth:
-            usersFile: /run/secrets/admins
-
+        
 certificatesResolvers:
   letsencrypt:
     acme:
@@ -38,3 +34,5 @@ log:
 providers:
   docker:
     exposedByDefault: false
+  file:
+    filename: /etc/traefik/dynamic.yml

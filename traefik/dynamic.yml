@@ -1,0 +1,9 @@
+http:
+
+  middlewares:
+    admin_auth:
+      basicAuth:
+        usersFile: /run/secrets/admins
+    user_auth:
+      basicAuth:
+        usersFile: /run/secrets/users

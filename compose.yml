@@ -11,7 +11,7 @@ services:
     volumes:
       - certificates:/usr/local/share/traefik/certs
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./traefik:/etc/traefik:ro
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
@@ -20,7 +20,6 @@ services:
       - "traefik.http.routers.dashboard.middlewares=admin_auth"
     secrets:
       - admins
-      - users
 
   oss-2021:
     container_name: oss-2021
