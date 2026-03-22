@@ -6,6 +6,8 @@ entryPoints:
     address: ":80"
   websecure:
     address: ":443"
+    http:
+      tls: true
 
 certificatesResolvers:
   letsencrypt:
