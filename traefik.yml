@@ -17,5 +17,8 @@ certificatesResolvers:
       httpChallenge:
         entryPoint: web
 
+log:
+  level: DEBUG
+
 providers:
   docker: {}

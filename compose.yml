@@ -19,7 +19,7 @@ services:
     image: moujikov/6k2_oss-2021
     env_file: .env
     labels:
-          - "traefik.http.routers.oss-2021.rule=Host(`2021.oss.6k2.ru`)"
+      - "traefik.http.routers.oss-2021.rule=Host(`2021.oss.6k2.ru`)"
     restart: unless-stopped
 
   oss-2023:
@@ -27,8 +27,8 @@ services:
     image: moujikov/6k2_oss-2023
     env_file: .env
     labels:
-          - "traefik.http.routers.oss-2023.rule=Host(`2023.oss.6k2.ru`)"
-          - "traefik.http.routers.oss-2023.rule=Host(`oss.6k2.ru`)"
+      - "traefik.http.routers.oss-2023.rule=Host(`2023.oss.6k2.ru`)"
+      - "traefik.http.routers.oss-2023.rule=Host(`oss.6k2.ru`)"
     restart: unless-stopped
 
 volumes:
