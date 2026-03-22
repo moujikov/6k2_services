@@ -7,14 +7,17 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    env_file: .env
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./traefik.yml:/traefik.yml
+      - certificates:/usr/local/share/traefik/certs
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik.yml:/traefik.yml:ro
     restart: unless-stopped
     
   oss-2021:
     container_name: oss-2021
     image: moujikov/6k2_oss-2021
+    env_file: .env
     labels:
           - "traefik.http.routers.oss-2021.rule=Host(`2021.oss.6k2.ru`)"
     restart: unless-stopped
@@ -22,6 +25,11 @@ services:
   oss-2023:
     container_name: oss-2023
     image: moujikov/6k2_oss-2023
+    env_file: .env
     labels:
           - "traefik.http.routers.oss-2023.rule=Host(`2023.oss.6k2.ru`)"
+          - "traefik.http.routers.oss-2023.rule=Host(`oss.6k2.ru`)"
     restart: unless-stopped
+
+volumes:
+  certificates:

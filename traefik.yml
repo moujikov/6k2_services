@@ -4,6 +4,16 @@ api:
 entryPoints:
   web:
     address: ":80"
+  websecure:
+    address: ":443"
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: admin@6k2.ru
+      storage: /usr/local/share/traefik/certs/acme.json
+      httpChallenge:
+        entryPoint: web
 
 providers:
   docker: {}
