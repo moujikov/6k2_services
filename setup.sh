@@ -8,17 +8,9 @@ DOCKER_SOURCES='/etc/apt/sources.list.d/docker.list'
 ARCH=$(dpkg --print-architecture)
 OS_RELEASE=$(. /etc/os-release && echo $VERSION_CODENAME)
 
-DOCKER_USER='moujikov'
-DOCKER_PAT="$1"
-
-if [ -z "$DOCKER_PAT" ]; then
-  echo "ERROR: No Docker Hub access token provided."
-  exit 1
-fi
-
 apt-get update
 apt-get install -y --no-install-recommends \
-  ca-certificates curl gnupg
+  ca-certificates curl gnupg apache2-utils
 
 if [ ! -d '/etc/apt/keyrings' ]; then
   install -m 0755 -d '/etc/apt/keyrings'
@@ -43,7 +35,31 @@ fi
 apt-get install -y --no-install-recommends \
   docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-docker login --username "$DOCKER_USER" --password "$DOCKER_PAT"
+if [ ! -d '/usr/local/share/traefik' ]; then
+  install -m 0755 -d '/usr/local/share/traefik'
+fi
+
+if [ ! -d '/usr/local/share/traefik/auth' ]; then
+  install -m 0700 -d '/usr/local/share/traefik/auth'
+fi
+
+if [ ! -f '/usr/local/share/traefik/auth/admins' ]; then
+  install -m 0600 /dev/null '/usr/local/share/traefik/auth/admins'
+fi
+
+if [ ! -f '/usr/local/share/traefik/auth/users' ]; then
+  install -m 0600 /dev/null '/usr/local/share/traefik/auth/users'
+fi
+
+
+DOCKER_USER='moujikov'
+read -s -p "Provide Docker Hub access token (empty to skip): " DOCKER_PAT
+echo
+
+if [ -n "$DOCKER_PAT" ]; then
+  docker login --username "$DOCKER_USER" --password "$DOCKER_PAT"
+  unset DOCKER_PAT
+fi
 
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 docker compose --file "$DIR/compose.yml" up --detach
