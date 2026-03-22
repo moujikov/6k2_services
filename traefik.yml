@@ -19,18 +19,16 @@ entryPoints:
     http:
       tls:
         certResolver: letsencrypt
-
-http:
-  routers:
-    dashboard:
-      rule: Host(`traefik.6k2.ru`)
-      service: api@internal
+      routers:
+        dashboard:
+          rule: Host(`traefik.6k2.ru`)
+          service: api@internal
+          middlewares:
+            - admin_auth
       middlewares:
-        - admin_auth
-  middlewares:
-    admin_auth:
-      basicAuth:
-        usersFile: /run/secrets/admins
+        admin_auth:
+          basicAuth:
+            usersFile: /run/secrets/admins
 
 certificatesResolvers:
   letsencrypt:
