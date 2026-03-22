@@ -1,12 +1,27 @@
 name: 6k2-services
 
 services:
+  traefik:
+    container_name: traefik
+    image: traefik:v3
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik.yml:/traefik.yml
+    restart: unless-stopped
+    
   oss-2021:
     container_name: oss-2021
     image: moujikov/6k2_oss-2021
+    labels:
+          - "traefik.http.routers.oss-2021.rule=Host(`2021.oss.6k2.ru`)"
     restart: unless-stopped
-    
+
   oss-2023:
     container_name: oss-2023
     image: moujikov/6k2_oss-2023
+    labels:
+          - "traefik.http.routers.oss-2023.rule=Host(`2023.oss.6k2.ru`)"
     restart: unless-stopped

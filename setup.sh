@@ -2,14 +2,6 @@
 
 set -eu -o pipefail
 
-apt-get update
-apt-get install -y --no-install-recommends \
-  ca-certificates curl gnupg
-
-if [ ! -d '/etc/apt/keyrings' ]; then
-  install -m 0755 -d '/etc/apt/keyrings'
-fi
-
 REPO='https://download.docker.com/linux/ubuntu'
 DOCKER_GPG='/etc/apt/keyrings/docker.gpg'
 DOCKER_SOURCES='/etc/apt/sources.list.d/docker.list'
@@ -18,6 +10,19 @@ OS_RELEASE=$(. /etc/os-release && echo $VERSION_CODENAME)
 
 DOCKER_USER='moujikov'
 DOCKER_PAT="$1"
+
+if [ -z "$DOCKER_PAT" ]; then
+  echo "ERROR: No Docker Hub access token provided."
+  exit 1
+fi
+
+apt-get update
+apt-get install -y --no-install-recommends \
+  ca-certificates curl gnupg
+
+if [ ! -d '/etc/apt/keyrings' ]; then
+  install -m 0755 -d '/etc/apt/keyrings'
+fi
 
 if [ ! -f $DOCKER_GPG ]; then
   curl -fsSL $REPO/gpg | gpg --dearmor -o $DOCKER_GPG
