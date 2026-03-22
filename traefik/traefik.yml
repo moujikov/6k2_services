@@ -16,10 +16,11 @@ entryPoints:
       tracing: false
   websecure:
     address: ":443"
+    asDefault: true
     http:
       tls:
         certResolver: letsencrypt
-        
+
 certificatesResolvers:
   letsencrypt:
     acme:
