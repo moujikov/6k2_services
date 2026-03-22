@@ -1,14 +1,36 @@
 api:
-  insecure: true
+  dashboard: true
 
 entryPoints:
   web:
     address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+          permanent: true
+    observability:
+      accessLogs: false
+      metrics: false
+      tracing: false
   websecure:
     address: ":443"
     http:
       tls:
         certResolver: letsencrypt
+
+http:
+  routers:
+    dashboard:
+      rule: Host(`traefik.6k2.ru`)
+      service: api@internal
+      middlewares:
+        - admin_auth
+  middlewares:
+    admin_auth:
+      basicAuth:
+        usersFile: /run/secrets/admins
 
 certificatesResolvers:
   letsencrypt:
@@ -22,4 +44,5 @@ log:
   level: INFO
 
 providers:
-  docker: {}
+  docker:
+    exposedByDefault: false

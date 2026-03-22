@@ -13,12 +13,16 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik.yml:/traefik.yml:ro
     restart: unless-stopped
-    
+    secrets:
+      - admins
+      - users
+
   oss-2021:
     container_name: oss-2021
     image: moujikov/6k2_oss-2021
     env_file: .env
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.oss-2021.rule=Host(`2021.oss.6k2.ru`)"
     restart: unless-stopped
 
@@ -27,9 +31,16 @@ services:
     image: moujikov/6k2_oss-2023
     env_file: .env
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.oss-2023.rule=Host(`2023.oss.6k2.ru`)"
       - "traefik.http.routers.oss-2023.rule=Host(`oss.6k2.ru`)"
     restart: unless-stopped
 
 volumes:
   certificates:
+
+secrets:
+  admins:
+    file: /usr/local/share/traefik/auth/admins
+  users:
+    file: /usr/local/share/traefik/auth/users
