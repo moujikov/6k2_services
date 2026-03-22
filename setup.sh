@@ -27,7 +27,7 @@ fi
 
 apt update
 
-if [ ! $(apt-cache policy docker-ce | grep -q "$REPO") ]; then
+if [ ! apt-cache policy docker-ce | grep -q "$REPO" ]; then
   echo "ERROR: Docker repository setup failed."
   exit 1
 fi

@@ -1,4 +1,4 @@
-# New VPS setup steps:
+### New VPS setup steps:
 1. SSH as root or `sudo` all commands below
 2. Update and upgrade packages:
    ```
