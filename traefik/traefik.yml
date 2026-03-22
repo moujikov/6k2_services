@@ -1,5 +1,6 @@
 api:
   dashboard: true
+  disabledashboardad: true
 
 entryPoints:
   web:

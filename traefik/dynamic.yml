@@ -2,10 +2,10 @@ http:
 
   middlewares:
     admin_auth:
-      basicAuth:
-        removeheader: true
+      digestAuth:
+        removeHeader: true
         usersFile: /run/secrets/admins
     user_auth:
-      basicAuth:
-        removeheader: true
+      digestAuth:
+        removeHeader: true
         usersFile: /run/secrets/users
