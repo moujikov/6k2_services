@@ -14,5 +14,5 @@
    ```
 5. Run the setup script:
    ```
-   /opt/services/setup.sh
+   /opt/services/setup.sh DOCKER_HUB_ACCESS_TOKEN
    ```
