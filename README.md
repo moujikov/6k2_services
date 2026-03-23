@@ -16,7 +16,7 @@
    ```
    /opt/services/setup.sh
    ```
-   Provide Git Hub access token when prompted.
+   Provide Docker Hub access token when prompted.
 
 6. Add admins with:
    ```
