@@ -37,11 +37,25 @@ services:
       - portainer_data:/data
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.portainer.service=portainer-frontend"
-      - "traefik.http.services.portainer-frontend.loadbalancer.server.port=9000"
+      - "traefik.http.routers.portainer.service=portainer"
+      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
       - >
         traefik.http.routers.portainer.rule=
         HostRegexp(`^portainer\.${BASE_DOMAINS}$`)
+
+
+  glances:
+    container_name: glances
+    image: nicolargo/glances:latest
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.glances.service=glances"
+      - "traefik.http.services.glances.loadbalancer.server.port=61208"
+      - "traefik.http.routers.glances.rule=Host(`glances.6k2.ru`)"
 
 
   oss-2021:
