@@ -67,7 +67,7 @@ services:
     env_file: .env
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.osch-2024.rule=Host(`2024.osch.6k2.ru`) || Host(`2024.xn--n1ags.xn--62-2lc.xn--p1ai/`)"
+      - "traefik.http.routers.osch-2024.rule=Host(`2024.osch.6k2.ru`) || Host(`2024.xn--n1ags.xn--62-2lc.xn--p1ai`)"
 
 volumes:
   certificates:

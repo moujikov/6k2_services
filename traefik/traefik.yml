@@ -21,6 +21,25 @@ entryPoints:
     http:
       tls:
         certResolver: letsencrypt
+        domains:
+          - main: "6k2.ru"
+            sans:
+              - "*.6k2.ru"
+              - "*.oss.6k2.ru"
+              - "*.osch.6k2.ru"
+          - main: "var62.ru"
+            sans:
+              - "*.var62.ru"
+              - "*.oss.var62.ru"
+              - "*.osch.var62.ru"
+          - main: "xn--62-2lc.xn--p1ai"            # 6к2.рф
+            sans:
+              - "*.xn--62-2lc.xn--p1ai"             # *.6к2.рф
+              - "*.xn--n1aga.xn--62-2lc.xn--p1ai"   # *.осс.6к2.рф
+              - "*.xn--n1ags.xn--62-2lc.xn--p1ai"   # *.осч.6к2.рф
+          - main: "xn--b1ayja.xn--p1ai"             # восс.рф
+            sans:
+              - "*.xn--b1ayja.xn--p1ai"             # *.восс.рф
 
 certificatesResolvers:
   letsencrypt:
@@ -29,9 +48,8 @@ certificatesResolvers:
       storage: /usr/local/share/traefik/certs/acme.json
       dnsChallenge:
         provider: timewebcloud
-
-      # httpChallenge:
-      #   entryPoint: web
+      httpChallenge:
+        entryPoint: web
 
 log:
   level: INFO
