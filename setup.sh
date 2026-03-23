@@ -35,21 +35,12 @@ fi
 apt-get install -y --no-install-recommends \
   docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-if [ ! -d '/usr/local/share/traefik' ]; then
-  install -m 0755 -d '/usr/local/share/traefik'
-fi
 
-if [ ! -d '/usr/local/share/traefik/auth' ]; then
-  install -m 0700 -d '/usr/local/share/traefik/auth'
-fi
-
-if [ ! -f '/usr/local/share/traefik/auth/admins' ]; then
-  install -m 0600 /dev/null '/usr/local/share/traefik/auth/admins'
-fi
-
-if [ ! -f '/usr/local/share/traefik/auth/users' ]; then
-  install -m 0600 /dev/null '/usr/local/share/traefik/auth/users'
-fi
+install -m 0755 -d '/usr/local/share/traefik'
+install -m 0700 -d '/usr/local/share/traefik/auth'
+install -m 0600 /dev/null '/usr/local/share/traefik/auth/admins'
+install -m 0600 /dev/null '/usr/local/share/traefik/auth/users'
+install -m 0600 /dev/null '/usr/local/share/traefik/auth/timeweb_auth_token'
 
 
 DOCKER_USER='moujikov'
@@ -60,6 +51,16 @@ if [ -n "$DOCKER_PAT" ]; then
   docker login --username "$DOCKER_USER" --password "$DOCKER_PAT"
   unset DOCKER_PAT
 fi
+
+
+read -s -p "Provide Timeweb Clound auth token (empty to skip): " TIMEWEB_AUTH_TOKEN
+echo
+
+if [ -n "$TIMEWEB_AUTH_TOKEN" ]; then
+  echo "$TIMEWEB_AUTH_TOKEN" > '/usr/local/share/traefik/auth/timeweb_auth_token'
+  unset TIMEWEB_AUTH_TOKEN
+fi
+
 
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 docker compose --file "$DIR/compose.yml" up --detach

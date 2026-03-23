@@ -27,8 +27,11 @@ certificatesResolvers:
     acme:
       email: admin@6k2.ru
       storage: /usr/local/share/traefik/certs/acme.json
-      httpChallenge:
-        entryPoint: web
+      dnsChallenge:
+        provider: timeweb
+
+      # httpChallenge:
+      #   entryPoint: web
 
 log:
   level: INFO

@@ -9,11 +9,12 @@ services:
       - "80:80"
       - "443:443"
     env_file: .env
+    environment:
+      - TIMEWEBCLOUD_AUTH_TOKEN_FILE=/run/secrets/timeweb_auth_token
     volumes:
       - certificates:/usr/local/share/traefik/certs
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik:/etc/traefik:ro
-
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dashboard.rule=Host(`traefik.6k2.ru`)"
@@ -21,6 +22,7 @@ services:
       - "traefik.http.routers.dashboard.middlewares=admin_auth@file"
     secrets:
       - admins
+      - timeweb_auth_token
 
 
   portainer:
@@ -58,6 +60,15 @@ services:
       - "traefik.http.routers.oss-2023.rule=Host(`2023.oss.6k2.ru`) || Host(`oss.6k2.ru`) || Host(`2023.xn--n1aga.xn--62-2lc.xn--p1ai`) || Host(`xn--n1aga.xn--62-2lc.xn--p1ai`)"
 
 
+  osch-2024:
+    container_name: osch-2024
+    image: moujikov/6k2_osch-2024
+    restart: unless-stopped
+    env_file: .env
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.osch-2024.rule=Host(`2024.osch.6k2.ru`) || Host(`2024.xn--n1ags.xn--62-2lc.xn--p1ai/`)"
+
 volumes:
   certificates:
   portainer_data:
@@ -67,3 +78,5 @@ secrets:
     file: /usr/local/share/traefik/auth/admins
   users:
     file: /usr/local/share/traefik/auth/users
+  timeweb_auth_token:
+    file: /usr/local/share/traefik/auth/timeweb_auth_token
