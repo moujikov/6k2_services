@@ -22,5 +22,4 @@ http:
   services:
     portainer:
       loadbalancer:
-        server:
-          port: 9000
+        server.port: 9000
