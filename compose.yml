@@ -75,7 +75,7 @@ services:
       - "traefik.enable=true"
       - > 
         traefik.http.routers.osch-2024.rule=
-        HostRegexp(`2024.(osch|os4).${BASE_DOMAINS}`) || 
+        HostRegexp(`2024\.(osch|os4)\.${BASE_DOMAINS}`) || 
         Host(`2024.xn--n1ags.xn--62-2lc.xn--p1ai`)
 
 volumes:
