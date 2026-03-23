@@ -47,7 +47,10 @@ services:
     env_file: .env
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.oss-2021.rule=Host(`2021.oss.6k2.ru`) || Host(`2021.xn--n1aga.xn--62-2lc.xn--p1ai`)"
+      - >
+        traefik.http.routers.oss-2021.rule=
+        Host(`2021.oss.6k2.ru`) ||
+        Host(`2021.xn--n1aga.xn--62-2lc.xn--p1ai`)
 
 
   oss-2023:
@@ -57,7 +60,10 @@ services:
     env_file: .env
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.oss-2023.rule=Host(`2023.oss.6k2.ru`) || Host(`oss.6k2.ru`) || Host(`2023.xn--n1aga.xn--62-2lc.xn--p1ai`) || Host(`xn--n1aga.xn--62-2lc.xn--p1ai`)"
+      - >
+        traefik.http.routers.oss-2023.rule=
+        Host(`2023.oss.6k2.ru`) || Host(`oss.6k2.ru`) || 
+        Host(`2023.xn--n1aga.xn--62-2lc.xn--p1ai`) || Host(`xn--n1aga.xn--62-2lc.xn--p1ai`)
 
 
   osch-2024:
@@ -67,7 +73,10 @@ services:
     env_file: .env
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.osch-2024.rule=Host(`2024.osch.6k2.ru`) || Host(`2024.xn--n1ags.xn--62-2lc.xn--p1ai`)"
+      - > 
+        traefik.http.routers.osch-2024.rule=
+        HostRegexp(`2024.(osch|os4).${BASE_DOMAINS}`) || 
+        Host(`2024.xn--n1ags.xn--62-2lc.xn--p1ai`)
 
 volumes:
   certificates:
