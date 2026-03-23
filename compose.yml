@@ -48,9 +48,9 @@ services:
     container_name: glances
     image: nicolargo/glances:latest
     restart: unless-stopped
-    stdin_open: true
-    tty: true
     env_file: .env
+    environment:
+      - "GLANCES_OPT=-w"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     labels:
