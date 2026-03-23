@@ -4,6 +4,7 @@ services:
   traefik:
     container_name: traefik
     image: traefik:v3
+    restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
@@ -12,7 +13,7 @@ services:
       - certificates:/usr/local/share/traefik/certs
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik:/etc/traefik:ro
-    restart: unless-stopped
+
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dashboard.rule=Host(`traefik.6k2.ru`)"
@@ -21,32 +22,41 @@ services:
     secrets:
       - admins
 
+
   portainer:
-    image: portainer/portainer-ce:latest
     container_name: portainer
+    image: portainer/portainer-ce:latest
+    restart: unless-stopped
     env_file: .env
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
-    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.portainer.rule=Host(`portainer.6k2.ru`)"
+      - "traefik.http.routers.portainer.service=portainer-frontend"
+      - "traefik.http.services.portainer-frontend.loadbalancer.server.port=9000"
+
 
   oss-2021:
     container_name: oss-2021
     image: moujikov/6k2_oss-2021
+    restart: unless-stopped
     env_file: .env
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.oss-2021.rule=Host(`2021.oss.6k2.ru`) || Host(`2021.xn--n1aga.xn--62-2lc.xn--p1ai`)"
-    restart: unless-stopped
+
 
   oss-2023:
     container_name: oss-2023
     image: moujikov/6k2_oss-2023
+    restart: unless-stopped
     env_file: .env
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.oss-2023.rule=Host(`2023.oss.6k2.ru`) || Host(`oss.6k2.ru`) || Host(`2023.xn--n1aga.xn--62-2lc.xn--p1ai`) || Host(`xn--n1aga.xn--62-2lc.xn--p1ai`)"
-    restart: unless-stopped
+
 
 volumes:
   certificates:
