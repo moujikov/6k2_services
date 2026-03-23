@@ -21,6 +21,15 @@ services:
     secrets:
       - admins
 
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    env_file: .env
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    restart: unless-stopped
+
   oss-2021:
     container_name: oss-2021
     image: moujikov/6k2_oss-2021
@@ -41,6 +50,7 @@ services:
 
 volumes:
   certificates:
+  portainer_data:
 
 secrets:
   admins:

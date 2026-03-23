@@ -9,3 +9,18 @@ http:
       digestAuth:
         removeHeader: true
         usersFile: /run/secrets/users
+
+  routers:
+    portainer:
+      rule: "Host(`portainer.6k2.ru`)"
+      service: portainer
+      observability:
+        metrics: false
+        accessLogs: false
+        tracing: false
+
+  services:
+    portainer:
+      loadbalancer:
+        server:
+          port: 9000
