@@ -21,7 +21,7 @@ services:
       - "traefik.http.routers.traefik.middlewares=admin_auth@file"
       - >
         traefik.http.routers.traefik.rule=
-        HostRegexp(`traefik\.${BASE_DOMAINS}`)
+        HostRegexp(`^traefik\.${BASE_DOMAINS}$`)
     secrets:
       - admins
       - timeweb_auth_token
