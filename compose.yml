@@ -73,9 +73,6 @@ services:
     env_file: .env
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.osch-2024.tls.domains[0].main=6k2.ru"
-      - "traefik.http.routers.osch-2024.tls.domains[1].main=var62.ru"
-      - "traefik.http.routers.osch-2024.tls.domains[2].main=xn--62-2lc.xn--p1ai"
       - > 
         traefik.http.routers.osch-2024.rule=
         HostRegexp(`2024\.(osch|os4)\.${BASE_DOMAINS}`) || 
