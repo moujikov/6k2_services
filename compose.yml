@@ -41,7 +41,7 @@ services:
       - "traefik.http.services.portainer-frontend.loadbalancer.server.port=9000"
       - >
         traefik.http.routers.portainer.rule=
-        HostRegexp(`portainer\.${BASE_DOMAINS}`)
+        HostRegexp(`^portainer\.${BASE_DOMAINS}$`)
 
 
   oss-2021:
@@ -53,7 +53,7 @@ services:
       - "traefik.enable=true"
       - >
         traefik.http.routers.oss-2021.rule=
-        HostRegexp(`2021\.oss\.${BASE_DOMAINS}`) ||
+        HostRegexp(`^2021\.oss\.${BASE_DOMAINS}$`) ||
         Host(`2021.xn--n1aga.xn--62-2lc.xn--p1ai`) ||
         Host(`2021.xn--b1ayja.xn--p1ai`)
 
@@ -67,8 +67,8 @@ services:
       - "traefik.enable=true"
       - >
         traefik.http.routers.oss-2023.rule=
-        HostRegexp(`oss\.${BASE_DOMAINS}`) || 
-        HostRegexp(`2023\.oss\.${BASE_DOMAINS}`) || 
+        HostRegexp(`^oss\.${BASE_DOMAINS}$`) || 
+        HostRegexp(`^2023\.oss\.${BASE_DOMAINS}$`) || 
         Host(`xn--n1aga.xn--62-2lc.xn--p1ai`) ||
         Host(`2023.xn--n1aga.xn--62-2lc.xn--p1ai`) || 
         Host(`xn--b1ayja.xn--p1ai`) || 
@@ -84,7 +84,7 @@ services:
       - "traefik.enable=true"
       - > 
         traefik.http.routers.osch-2024.rule=
-        HostRegexp(`2024\.(osch|os4)\.${BASE_DOMAINS}`) || 
+        HostRegexp(`^2024\.(osch|os4)\.${BASE_DOMAINS}$`) || 
         Host(`2024.xn--n1ags.xn--62-2lc.xn--p1ai`)
 
 
@@ -97,7 +97,7 @@ services:
       - "traefik.enable=true"
       - > 
         traefik.http.routers.alt-chat.rule=
-        HostRegexp(`a4\.${BASE_DOMAINS}`)
+        HostRegexp(`^a4\.${BASE_DOMAINS}$`)
     secrets:
       - users
 
