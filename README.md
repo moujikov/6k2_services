@@ -16,7 +16,8 @@
    ```
    /opt/services/setup.sh
    ```
-  Provide Git Hub access token when prompted.
+   Provide Git Hub access token when prompted.
+
 6. Add admins with:
    ```
    htdigest /usr/local/share/traefik/auth/admins traefik USER_NAME
