@@ -36,6 +36,21 @@ services:
       - timeweb_auth_token
 
 
+  watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_POLL_INTERVAL=60
+      - WATCHTOWER_LABEL_ENABLE=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /root/.docker/config.json:/config.json
+    command: --interval 30
+
+
   portainer:
     container_name: portainer
     image: portainer/portainer-ce:latest
@@ -125,6 +140,7 @@ services:
     restart: unless-stopped
     env_file: .env
     labels:
+      - "com.centurylinklabs.watchtower.enable=true"
       - "traefik.enable=true"
       - >
         traefik.http.routers.alt-chat.rule=
