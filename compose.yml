@@ -78,6 +78,7 @@ services:
     volumes:
       - /:/rootfs:ro
       - portainer_data:/portainer_data:ro
+      - utility-bills_data:/utility-bills_data:ro
       - ./glances:/etc/glances:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/os-release:/etc/os-release:ro
