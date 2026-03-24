@@ -17,15 +17,18 @@ services:
       - ./traefik:/etc/traefik:ro
     labels:
       - "traefik.enable=true"
+
+      - "traefik.http.routers.traefik-static.priority=100"
       - "traefik.http.routers.traefik-static.service=api@internal"
       - >
         traefik.http.routers.traefik-static.rule=
         Host(`traefik.6k2.ru`) && (
           PathPrefix(`/static/`) ||
-          PathRegexp(`/manifest.json$`) || 
-          PathRegexp(`/favicon.[a-z]+$`)
+          PathRegexp(`/manifest\.json$`) || 
+          PathRegexp(`/favicon\.(ico|png|svg)$`)
         )
 
+      - "traefik.http.routers.traefik.priority=10"
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.traefik.middlewares=admin_auth@file"
       - >
@@ -60,7 +63,10 @@ services:
     env_file: .env
     environment:
       - "GLANCES_OPT=-w"
+    pid: host
     volumes:
+      - /:/rootfs:ro
+      - ./glances:/etc/glances:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/os-release:/etc/os-release:ro
     labels:
