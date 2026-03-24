@@ -154,6 +154,8 @@ services:
     image: moujikov/6k2_utility-bills
     restart: unless-stopped
     env_file: .env
+    volumes:
+      - utility-bills_data:/var/app-data
     labels:
       - "traefik.enable=true"
       - > 
@@ -179,6 +181,8 @@ services:
 volumes:
   certificates:
   portainer_data:
+  utility-bills_data:
+
 
 secrets:
   admins:
