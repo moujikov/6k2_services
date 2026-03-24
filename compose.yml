@@ -134,6 +134,34 @@ services:
         Host(`2024.xn--n1ags.xn--62-2lc.xn--p1ai`)
 
 
+  osch-2025:
+    container_name: osch-2025
+    image: moujikov/6k2_osch-2025
+    restart: unless-stopped
+    env_file: .env
+    labels:
+      - "traefik.enable=true"
+      - > 
+        traefik.http.routers.osch-2025.rule=
+        Host(`os4.6k2.ru`) || 
+        Host(`2025.os4.6k2.ru`) || 
+        Host(`xn--n1ags.xn--62-2lc.xn--p1ai`) ||
+        Host(`2025.xn--n1ags.xn--62-2lc.xn--p1ai`)
+
+
+  utility-bills:
+    container_name: utility-bills
+    image: moujikov/6k2_utility-bills
+    restart: unless-stopped
+    env_file: .env
+    labels:
+      - "traefik.enable=true"
+      - > 
+        traefik.http.routers.utility-bills.rule=
+        Host(`bills.6k2.ru`) || 
+        Host(`bills.var62.ru`) 
+
+
   alt-chat:
     container_name: alt-chat
     image: moujikov/6k2_alt-chat
