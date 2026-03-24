@@ -87,7 +87,7 @@ services:
       - "traefik.enable=true"
       - >
         traefik.http.routers.oss-2021.rule=
-        Host(`2021.oss.6k2.ru$`) || 
+        Host(`2021.oss.6k2.ru`) || 
         Host(`2021.xn--n1aga.xn--62-2lc.xn--p1ai`) ||
         Host(`2021.xn--b1ayja.xn--p1ai`)
 
@@ -101,8 +101,8 @@ services:
       - "traefik.enable=true"
       - >
         traefik.http.routers.oss-2023.rule=
-        Host(`oss.6k2.ru$`) || 
-        Host(`2023.oss.6k2.ru$`) || 
+        Host(`oss.6k2.ru`) || 
+        Host(`2023.oss.6k2.ru`) || 
         Host(`xn--n1aga.xn--62-2lc.xn--p1ai`) ||
         Host(`2023.xn--n1aga.xn--62-2lc.xn--p1ai`) || 
         Host(`xn--b1ayja.xn--p1ai`) || 
@@ -118,7 +118,7 @@ services:
       - "traefik.enable=true"
       - > 
         traefik.http.routers.osch-2024.rule=
-        Host(`2024.os4.6k2.ru$`) || 
+        Host(`2024.os4.6k2.ru`) || 
         Host(`2024.xn--n1ags.xn--62-2lc.xn--p1ai`)
 
 
