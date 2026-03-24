@@ -38,7 +38,7 @@ services:
 
   watchtower:
     container_name: watchtower
-    image: containrrr/watchtower
+    image: nickfedor/watchtower
     restart: unless-stopped
     env_file: .env
     environment:
