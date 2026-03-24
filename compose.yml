@@ -50,7 +50,7 @@ services:
       - "traefik.http.routers.portainer.service=portainer"
       - >
         traefik.http.routers.portainer.rule=
-        Host(`portainer.6k2.ru`)
+        Host(`docker.6k2.ru`)
 
 
   glances:
