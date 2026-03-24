@@ -23,10 +23,9 @@ services:
       - >
         traefik.http.routers.traefik-static.rule=
         Host(`traefik.6k2.ru`) && (
-          PathPrefix(`/static/`) ||
-          PathRegexp(`/manifest\.json$`) || 
-          PathRegexp(`/favicon\.(ico|png|svg)$`)
-        )
+        PathPrefix(`/static/`) ||
+        PathRegexp(`/manifest\.json$`) || 
+        PathRegexp(`/favicon\.(ico|png|svg)$`) )
 
       - "traefik.http.routers.traefik.priority=10"
       - "traefik.http.routers.traefik.service=api@internal"
