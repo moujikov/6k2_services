@@ -1,11 +1,15 @@
 http:
 
   middlewares:
-    admin_auth:
+    admin-auth:
       digestAuth:
         removeHeader: true
         usersFile: /run/secrets/admins
-    user_auth:
+    user-auth:
       digestAuth:
         removeHeader: true
         usersFile: /run/secrets/users
+    ip-whitelist:
+      ipAllowList:
+        sourceRange:
+          - "93.191.63.222/32"

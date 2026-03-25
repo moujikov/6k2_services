@@ -27,7 +27,8 @@ services:
         PathRegexp(`/favicon\.(ico|png|svg)$`) )
 
       - "traefik.http.routers.traefik.service=api@internal"
-      - "traefik.http.routers.traefik.middlewares=admin_auth@file"
+      - "traefik.http.routers.traefik.middlewares=admin-auth@file"
+      - "traefik.http.routers.traefik.middlewares=ip-whitelist@file"
       - >
         traefik.http.routers.traefik.rule=
         Host(`traefik.6k2.ru`)
@@ -62,9 +63,10 @@ services:
       - "traefik.enable=true"
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
       - "traefik.http.routers.portainer.service=portainer"
+      - "traefik.http.routers.portainer.middlewares=ip-whitelist@file"
       - >
         traefik.http.routers.portainer.rule=
-        Host(`docker.6k2.ru`)
+        Host(`portainer.6k2.ru`)
 
 
   glances:
@@ -86,6 +88,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.services.glances.loadbalancer.server.port=61208"
       - "traefik.http.routers.glances.service=glances"
+      - "traefik.http.routers.glances.middlewares=ip-whitelist@file"
       - >
         traefik.http.routers.glances.rule=
         Host(`glances.6k2.ru`)
