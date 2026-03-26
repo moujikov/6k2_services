@@ -50,7 +50,7 @@ services:
       - db_password_postgres
       - db_password_authelia
     healthcheck:
-      test: pg_isready
+      test: pg_isready -U postgres
       interval: 10s
       timeout: 5s
       retries: 3
