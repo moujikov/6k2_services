@@ -45,11 +45,11 @@ apt-get install -y --no-install-recommends \
 ### SETTING UP ENVIRONMENT
 
 ensure_secret_file() {  
-  [ -f "$1" ] || install -m 0600 /dev/null "$1"
+  [ -f "$1" ] || install -m 0400 /dev/null "$1"
 }
 
 set_secret() {
-  install -m 0600 /dev/null "$1"
+  install -m 0400 /dev/null "$1"
   echo "$2" >> "$1"
 }
 
@@ -61,7 +61,7 @@ generate_secret() {
   if [ -f "$file" ]; then
     echo "File '$file' already exists. Delete it to regenerate. Skipping..."
   else
-    install -m 0600 /dev/null "$file"
+    install -m 0400 /dev/null "$file"
     printf "$prefix" >> "$file"
     (
       set +o pipefail   # Disable pipefail since cat will fail after SIGPIPE when head exits
