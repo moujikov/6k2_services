@@ -55,13 +55,14 @@ set_secret() {
 
 generate_secret() {
   local file="$1"
-  local length=${2:-16}
-  local prefix="${3:-}"
-  
+  local permissions="$2"
+  local length=${3:-16}
+  local prefix="${4:-}"
+
   if [ -f "$file" ]; then
     echo "File '$file' already exists. Delete it to regenerate. Skipping..."
   else
-    install -m 0400 /dev/null "$file"
+    install -m "$permissions" /dev/null "$file"
     printf "$prefix" >> "$file"
     (
       set +o pipefail   # Disable pipefail since cat will fail after SIGPIPE when head exits
@@ -96,8 +97,8 @@ if [ -n "$TIMEWEB_AUTH_TOKEN" ]; then
   unset TIMEWEB_AUTH_TOKEN
 fi
 
-generate_secret '/usr/local/share/database/auth/db_password_postgres' 32 __postgres_  
-generate_secret '/usr/local/share/database/auth/db_password_authelia' 32 __authelia_
+generate_secret '/usr/local/share/database/auth/db_password_postgres' 0400 32 __postgres_  
+generate_secret '/usr/local/share/database/auth/db_password_authelia' 0444 32 __authelia_
 
 ensure_secret_file '/usr/local/share/traefik/auth/admins'
 ensure_secret_file '/usr/local/share/traefik/auth/users'

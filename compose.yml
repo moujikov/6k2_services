@@ -48,11 +48,7 @@ services:
       - POSTGRES_PASSWORD_FILE=/run/secrets/db_password_postgres
     secrets:
       - db_password_postgres
-      # change ownership of db users passwords to postgres (uid 70, gid 70)
-      # since postgres system user will need to read passwords in order to create db users
-      - source: db_password_authelia
-        uid: '70'
-        gid: '70'
+      - db_password_authelia
     healthcheck:
       test: pg_isready -U postgres
       interval: 10s
