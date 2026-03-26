@@ -2,7 +2,7 @@
 
 set -eu -o pipefail
 
-create_user() {
+create_db_and_user() {
 	local DATABASE=$1
 	local USER=$2
 	local PASSWORD="$(< /run/secrets/db_password_$USER)"

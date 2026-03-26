@@ -20,9 +20,7 @@ apt-get update
 apt-get install -y --no-install-recommends \
   ca-certificates curl gnupg apache2-utils
 
-if [ ! -d '/etc/apt/keyrings' ]; then
-  install -m 0755 -d '/etc/apt/keyrings'
-fi
+install -m 0755 -d '/etc/apt/keyrings'
 
 if [ ! -f $DOCKER_GPG ]; then
   curl -fsSL $REPO/gpg | gpg --dearmor -o $DOCKER_GPG
