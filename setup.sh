@@ -65,7 +65,10 @@ generate_secret() {
   else
     install -m 0600 /dev/null "$file"
     printf "$prefix" >> "$file"
-    cat /dev/random | LC_ALL=C tr -dc 'A-Za-z0-9' | head -c $length >> "$file"
+    (
+      set +o pipefail   # Disable pipefail since cat will fail after SIGPIPE when head exits
+      cat /dev/random | LC_ALL=C tr -dc 'A-Za-z0-9' | head -c $length >> "$file"
+    ) || exit $?
     echo "Generated secret in '$file'"; echo
   fi
 }
@@ -104,3 +107,5 @@ ensure_secret_file '/usr/local/share/traefik/auth/users'
 
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 docker compose --file "$DIR/compose.yml" up --detach
+
+echo "ALL DONE!"
