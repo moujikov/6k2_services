@@ -61,7 +61,7 @@ generate_secret() {
   local prefix="${3:-}"
   
   if [ -f "$file" ]; then
-    echo "File '$file' already exists. Delete it to regenerate. Skipping..."; echo
+    echo "File '$file' already exists. Delete it to regenerate. Skipping..."
   else
     install -m 0600 /dev/null "$file"
     printf "$prefix" >> "$file"
@@ -69,7 +69,7 @@ generate_secret() {
       set +o pipefail   # Disable pipefail since cat will fail after SIGPIPE when head exits
       cat /dev/random | LC_ALL=C tr -dc 'A-Za-z0-9' | head -c $length >> "$file"
     ) || exit $?
-    echo "Generated secret in '$file'"; echo
+    echo "Generated secret in '$file'"
   fi
 }
 
@@ -107,5 +107,3 @@ ensure_secret_file '/usr/local/share/traefik/auth/users'
 
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 docker compose --file "$DIR/compose.yml" up --detach
-
-echo "ALL DONE!"
