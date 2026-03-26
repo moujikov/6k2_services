@@ -48,7 +48,8 @@ services:
       - POSTGRES_PASSWORD_FILE=/run/secrets/db_password_postgres
     secrets:
       - db_password_postgres
-      - db_password_authelia
+      - source: db_password_authelia
+        mode: "0444"  # postgres user will need to read passwords in order to create db users
     healthcheck:
       test: pg_isready -U postgres
       interval: 10s
