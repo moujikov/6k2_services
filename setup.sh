@@ -55,9 +55,9 @@ set_secret() {
 
 generate_secret() {
   local file="$1"
-  local permissions="$2"
-  local length=${3:-16}
-  local prefix="${4:-}"
+  local length=${2:-16}
+  local prefix="${3:-}"
+  local permissions="${4:-0400}"
 
   if [ -f "$file" ]; then
     echo "File '$file' already exists. Delete it to regenerate. Skipping..."
@@ -97,8 +97,8 @@ if [ -n "$TIMEWEB_AUTH_TOKEN" ]; then
   unset TIMEWEB_AUTH_TOKEN
 fi
 
-generate_secret '/usr/local/share/database/auth/db_password_postgres' 0400 32 __postgres_  
-generate_secret '/usr/local/share/database/auth/db_password_authelia' 0444 32 __authelia_
+generate_secret '/usr/local/share/database/auth/db_password_postgres' 32 __postgres_  
+generate_secret '/usr/local/share/database/auth/db_password_authelia' 32 __authelia_ 0444
 
 ensure_secret_file '/usr/local/share/traefik/auth/admins'
 ensure_secret_file '/usr/local/share/traefik/auth/users'
