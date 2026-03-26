@@ -36,6 +36,32 @@ services:
       - timeweb_auth_token
 
 
+  database:
+    container_name: database
+    image: postgres:18-alpine
+    restart: unless-stopped
+    volumes:
+      - ./database/init:/docker-entrypoint-initdb.d
+      - database:/var/lib/postgresql
+    env_file: .env
+    environment:
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db_password_postgres
+    secrets:
+      - db_password_postgres
+      - db_password_authelia
+    healthcheck:
+      test: pg_isready
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+      start_interval: 1s
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+
+
   watchtower:
     container_name: watchtower
     image: nickfedor/watchtower
@@ -78,6 +104,7 @@ services:
     pid: host
     volumes:
       - /:/rootfs:ro
+      - database:/database:ro
       - portainer_data:/portainer_data:ro
       - utility-bills_data:/utility-bills_data:ro
       - ./glances:/etc/glances:ro
@@ -183,6 +210,7 @@ services:
 
 volumes:
   certificates:
+  database:
   portainer_data:
   utility-bills_data:
 
@@ -194,3 +222,7 @@ secrets:
     file: /usr/local/share/traefik/auth/users
   timeweb_auth_token:
     file: /usr/local/share/traefik/auth/timeweb_auth_token
+  db_password_postgres:
+    file: /usr/local/share/database/auth/db_password_postgres
+  db_password_authelia:
+    file: /usr/local/share/database/auth/db_password_authelia
