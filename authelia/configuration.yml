@@ -27,6 +27,7 @@ session:
       default_redirection_url: https://6k2.ru
 
 notifier:
+  disable_startup_check: true
   smtp:
     startup_check_address: test@6k2.ru
     address: smtp://smtp.yandex.ru:465
