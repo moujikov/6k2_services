@@ -1,0 +1,13 @@
+storage:
+  postgres:
+    address: 'tcp://database:5432'
+    database: 'authelia'
+    username: 'authelia'
+  
+access_control:
+  default_policy: deny
+  rules:
+    - domain: '*.6k2.ru'
+      policy: one_factor
+    - domain: '*.var62.ru'
+      policy: one_factor

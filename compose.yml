@@ -6,46 +6,66 @@ services:
     image: traefik:v3
     restart: unless-stopped
     ports:
-      - "80:80"
-      - "443:443"
+      - 80:80
+      - 443:443
     env_file: .env
     environment:
-      - TIMEWEBCLOUD_AUTH_TOKEN_FILE=/run/secrets/timeweb_auth_token
+      TIMEWEBCLOUD_AUTH_TOKEN_FILE: /run/secrets/timeweb_auth_token
     volumes:
       - certificates:/usr/local/share/traefik/certs
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik:/etc/traefik:ro
     labels:
-      - "traefik.enable=true"
-
-      - "traefik.http.routers.traefik-static.service=api@internal"
-      - >
-        traefik.http.routers.traefik-static.rule=
+      traefik.enable: 'true'
+      
+      traefik.http.routers.traefik-static.service: api@internal
+      traefik.http.routers.traefik-static.rule: >
         Host(`traefik.6k2.ru`) && (
         PathPrefix(`/static/`) ||
         PathRegexp(`/manifest\.json$`) || 
         PathRegexp(`/favicon\.(ico|png|svg)$`) )
 
-      - "traefik.http.routers.traefik.service=api@internal"
-      - "traefik.http.routers.traefik.middlewares=ip-whitelist@file,admin-auth@file"
-      - >
-        traefik.http.routers.traefik.rule=
+      traefik.http.routers.traefik.service: api@internal
+      traefik.http.routers.traefik.middlewares: ip-whitelist@file,admin-auth@file
+      traefik.http.routers.traefik.rule: >
         Host(`traefik.6k2.ru`)
     secrets:
       - admins
       - timeweb_auth_token
 
 
+  authelia:
+    container_name: authelia
+    image: authelia/authelia:4
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      AUTHELIA_STORAGE_POSTGRES_PASSWORD_FILE: /run/secrets/db_password_authelia
+      AUTHELIA_SESSION_SECRET_FILE: /run/secrets/authelia_session_secret
+      AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /run/secrets/authelia_storage_encryption_key
+    volumes:
+      - ./authelia:/config:ro
+    labels:
+      traefik.enable: 'true'
+      traefik.http.routers.authelia.middlewares: ip-whitelist@file
+      traefik.http.routers.authelia.rule: >
+        Host(`auth.6k2.ru`)
+    secrets:
+      - db_password_authelia
+      - authelia_session_secret
+      - authelia_storage_encryption_key
+
+
   database:
     container_name: database
     image: postgres:18-alpine
     restart: unless-stopped
+    env_file: .env
+    environment:
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password_postgres
     volumes:
       - ./database/init:/docker-entrypoint-initdb.d
       - database:/var/lib/postgresql
-    env_file: .env
-    environment:
-      - POSTGRES_PASSWORD_FILE=/run/secrets/db_password_postgres
     secrets:
       - db_password_postgres
       - db_password_authelia
@@ -68,9 +88,9 @@ services:
     restart: unless-stopped
     env_file: .env
     environment:
-      - WATCHTOWER_CLEANUP=true
-      - WATCHTOWER_POLL_INTERVAL=60
-      - WATCHTOWER_LABEL_ENABLE=true
+      WATCHTOWER_CLEANUP: true
+      WATCHTOWER_POLL_INTERVAL: 60
+      WATCHTOWER_LABEL_ENABLE: true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /root/.docker/config.json:/config.json
@@ -85,12 +105,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
-      - "traefik.http.routers.portainer.service=portainer"
-      - "traefik.http.routers.portainer.middlewares=ip-whitelist@file"
-      - >
-        traefik.http.routers.portainer.rule=
+      traefik.enable: 'true'
+      traefik.http.services.portainer.loadbalancer.server.port: 9000
+      traefik.http.routers.portainer.service: portainer
+      traefik.http.routers.portainer.middlewares: ip-whitelist@file
+      traefik.http.routers.portainer.rule: >
         Host(`portainer.6k2.ru`)
 
 
@@ -100,7 +119,7 @@ services:
     restart: unless-stopped
     env_file: .env
     environment:
-      - "GLANCES_OPT=-w"
+      GLANCES_OPT: -w
     pid: host
     volumes:
       - /:/rootfs:ro
@@ -111,12 +130,11 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/os-release:/etc/os-release:ro
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.services.glances.loadbalancer.server.port=61208"
-      - "traefik.http.routers.glances.service=glances"
-      - "traefik.http.routers.glances.middlewares=ip-whitelist@file"
-      - >
-        traefik.http.routers.glances.rule=
+      traefik.enable: 'true'
+      traefik.http.services.glances.loadbalancer.server.port: 61208
+      traefik.http.routers.glances.service: glances
+      traefik.http.routers.glances.middlewares: ip-whitelist@file
+      traefik.http.routers.glances.rule: >
         Host(`glances.6k2.ru`)
 
 
@@ -126,9 +144,8 @@ services:
     restart: unless-stopped
     env_file: .env
     labels:
-      - "traefik.enable=true"
-      - >
-        traefik.http.routers.oss-2021.rule=
+      traefik.enable: 'true'
+      traefik.http.routers.oss-2021.rule: >
         Host(`2021.oss.6k2.ru`) || 
         Host(`2021.xn--n1aga.xn--62-2lc.xn--p1ai`) ||
         Host(`2021.xn--b1ayja.xn--p1ai`)
@@ -140,9 +157,8 @@ services:
     restart: unless-stopped
     env_file: .env
     labels:
-      - "traefik.enable=true"
-      - >
-        traefik.http.routers.oss-2023.rule=
+      traefik.enable: 'true'
+      traefik.http.routers.oss-2023.rule: >
         Host(`oss.6k2.ru`) || 
         Host(`2023.oss.6k2.ru`) || 
         Host(`xn--n1aga.xn--62-2lc.xn--p1ai`) ||
@@ -157,9 +173,8 @@ services:
     restart: unless-stopped
     env_file: .env
     labels:
-      - "traefik.enable=true"
-      - > 
-        traefik.http.routers.osch-2024.rule=
+      traefik.enable: 'true'
+      traefik.http.routers.osch-2024.rule: >
         Host(`2024.os4.6k2.ru`) || 
         Host(`2024.xn--n1ags.xn--62-2lc.xn--p1ai`)
 
@@ -170,9 +185,8 @@ services:
     restart: unless-stopped
     env_file: .env
     labels:
-      - "traefik.enable=true"
-      - > 
-        traefik.http.routers.osch-2025.rule=
+      traefik.enable: 'true'
+      traefik.http.routers.osch-2025.rule: >
         Host(`os4.6k2.ru`) || 
         Host(`2025.os4.6k2.ru`) || 
         Host(`xn--n1ags.xn--62-2lc.xn--p1ai`) ||
@@ -187,11 +201,10 @@ services:
     volumes:
       - utility-bills_data:/var/app-data
     labels:
-      - "traefik.enable=true"
-      - > 
-        traefik.http.routers.utility-bills.rule=
-        Host(`bills.6k2.ru`) || 
-        Host(`bills.var62.ru`) 
+      traefik.enable: 'true'
+      traefik.http.routers.utility-bills.middlewares: redirects@file
+      traefik.http.routers.utility-bills.rule: >
+        Host(`bills.6k2.ru`)
 
 
   alt-chat:
@@ -200,19 +213,18 @@ services:
     restart: unless-stopped
     env_file: .env
     labels:
-      - "com.centurylinklabs.watchtower.enable=true"
-      - "traefik.enable=true"
-      - >
-        traefik.http.routers.alt-chat.rule=
+      com.centurylinklabs.watchtower.enable: 'true'
+      traefik.enable: 'true'
+      traefik.http.routers.alt-chat.rule: >
         Host(`a4.6k2.ru`)
     secrets:
       - users
 
 volumes:
-  certificates:
-  database:
-  portainer_data:
-  utility-bills_data:
+  - certificates
+  - database
+  - portainer_data
+  - utility-bills_data
 
 
 secrets:

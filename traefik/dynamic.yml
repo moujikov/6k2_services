@@ -1,15 +1,44 @@
 http:
 
   middlewares:
+    restricted:
+      chain:
+        middlewares:
+          - ip-whitelist
+          - admin-auth
+
+    redirects:
+      chain:
+        middlewares:
+          - redirect-var62
+
     admin-auth:
       digestAuth:
         removeHeader: true
         usersFile: /run/secrets/admins
+
     user-auth:
       digestAuth:
         removeHeader: true
         usersFile: /run/secrets/users
+        
+    authelia:
+      forwardAuth:
+        address: http://authelia:9091/api/authz/forward-auth
+        trustForwardHeader: true
+        authResponseHeaders:
+          - Remote-User
+          - Remote-Groups
+          - Remote-Name
+          - Remote-Email
+
     ip-whitelist:
       ipAllowList:
         sourceRange:
-          - "93.191.63.222/32"
+          - 93.191.63.222/32
+
+    redirect-var62:
+      redirectRegex:
+        regex: ^https://(.*)\\.var62\\.ru/(.*)
+        replacement: https://${1}.6k2.ru/${2}
+        permanent: false
