@@ -29,9 +29,9 @@ session:
 notifier:
   smtp:
     startup_check_address: test@6k2.ru
-    address: smtp://smtp.yandex.ru:465
+    address: smtp://smtp.yandex.ru:25
     username: andrey.muzhikov@6k2.ru
-    sender: ТСЖ «Варшавская 6-2» <andrey.muzhikov@6k2.ru>
+    sender: ТСЖ «Варшавская 6-2» <no-reply@6k2.ru>
     identifier: 6k2.ru
     subject: '[Authelia] {title}'
 
