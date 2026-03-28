@@ -45,7 +45,10 @@ apt-get install -y --no-install-recommends \
 ### SETTING UP ENVIRONMENT
 
 ensure_secret_file() {  
-  [ -f "$1" ] || install -m 0400 /dev/null "$1"
+  local file="$1"
+  local permissions="${2:-0400}"
+
+  [ -f "$file" ] || install -m "$permissions" /dev/null "$file"
 }
 
 set_secret() {
@@ -82,6 +85,7 @@ install -m 0700 -d "$database_files/auth"
 
 authelia_files='/usr/local/share/authelia'
 install -m 0755 -d "$authelia_files"
+install -m 0700 -d "$authelia_files/auth"
 install -m 0700 -d "$authelia_files/keys"
 
 
@@ -107,6 +111,8 @@ ensure_secret_file "$traefik_files/auth/users"
 
 generate_secret "$database_files/auth/db_password_postgres" 32 __postgres_  
 generate_secret "$database_files/auth/db_password_authelia" 32 __authelia_ 0444
+
+ensure_secret_file "$authelia_files/auth/users.yml" 0600
 
 generate_secret "$authelia_files/keys/authelia_storage_encryption_key" 64 '' 0444
 generate_secret "$authelia_files/keys/authelia_session_secret" 64 '' 0444
