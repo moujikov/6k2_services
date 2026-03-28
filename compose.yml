@@ -92,6 +92,7 @@ services:
       WATCHTOWER_CLEANUP: true
       WATCHTOWER_POLL_INTERVAL: 60
       WATCHTOWER_LABEL_ENABLE: true
+      WATCHTOWER_LOG_LEVEL: warn
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /root/.docker/config.json:/config.json
@@ -203,8 +204,9 @@ services:
       - utility-bills_data:/var/app-data
     labels:
       traefik.enable: 'true'
-      traefik.http.routers.utility-bills.middlewares: redirects@file
+      traefik.http.routers.utility-bills.middlewares: redirect-var62@file
       traefik.http.routers.utility-bills.rule: >
+        Host(`bills.var62.ru`) || 
         Host(`bills.6k2.ru`)
 
 
