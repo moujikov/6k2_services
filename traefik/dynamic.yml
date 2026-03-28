@@ -37,7 +37,7 @@ http:
   routers:
     redirect-var62:
       rule: >
-        Host(`var62.ru$`) ||
+        Host(`var62.ru`) ||
         HostRegexp(`^.*\.var62\.ru$`)
       middlewares: redirect-var62
       service: noop@internal
