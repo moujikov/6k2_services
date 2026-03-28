@@ -7,11 +7,6 @@ http:
           - ip-whitelist
           - admin-auth
 
-    redirects:
-      chain:
-        middlewares:
-          - redirect-var62
-
     admin-auth:
       digestAuth:
         removeHeader: true
@@ -26,11 +21,7 @@ http:
       forwardAuth:
         address: http://authelia:9091/api/authz/forward-auth
         trustForwardHeader: true
-        authResponseHeaders:
-          - Remote-User
-          - Remote-Groups
-          - Remote-Name
-          - Remote-Email
+        authResponseHeaders: [Remote-User, Remote-Groups, Remote-Name, Remote-Email]
 
     ip-whitelist:
       ipAllowList:
@@ -39,6 +30,12 @@ http:
 
     redirect-var62:
       redirectRegex:
-        regex: ^https://(.*)\\.var62\\.ru(/.*)
-        replacement: https://${1}.6k2.ru${2}
+        regex: ^https://(.*\\.)?var62\\.ru(/?.*)
+        replacement: https://${1}6k2.ru${2}
         permanent: false
+
+  routers:
+    redirect-var62:
+      rule: HostRegexp(`^(.*\.)?var62\.ru$`)
+      middlewares: redirect-var62
+      service: noop@internal

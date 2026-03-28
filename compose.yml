@@ -26,7 +26,7 @@ services:
         PathRegexp(`/favicon\.(ico|png|svg)$`) )
 
       traefik.http.routers.traefik.service: api@internal
-      traefik.http.routers.traefik.middlewares: ip-whitelist@file,admin-auth@file
+      traefik.http.routers.traefik.middlewares: ip-whitelist@file, admin-auth@file
       traefik.http.routers.traefik.rule: >
         Host(`traefik.6k2.ru`)
     secrets:
@@ -204,9 +204,7 @@ services:
       - utility-bills_data:/var/app-data
     labels:
       traefik.enable: 'true'
-      traefik.http.routers.utility-bills.middlewares: redirect-var62@file
       traefik.http.routers.utility-bills.rule: >
-        Host(`bills.var62.ru`) || 
         Host(`bills.6k2.ru`)
 
 
