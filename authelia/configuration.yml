@@ -1,5 +1,5 @@
 server:
-  address: 'tcp://:80/'
+  address: tcp://:8080
 
 authentication_backend:
   file:
