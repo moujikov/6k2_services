@@ -221,10 +221,10 @@ services:
       - users
 
 volumes:
-  - certificates
-  - database
-  - portainer_data
-  - utility-bills_data
+  certificates:
+  database:
+  portainer_data:
+  utility-bills_data:
 
 
 secrets:
