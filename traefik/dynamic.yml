@@ -39,5 +39,5 @@ http:
       rule: >
         Host(`var62.ru`) ||
         HostRegexp(`^.*\.var62\.ru$`)
-      middlewares: [redirect-var62]
+      middlewares: [redirect-var62@file]
       service: noop@internal
