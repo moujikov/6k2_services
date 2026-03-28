@@ -1,3 +1,6 @@
+server:
+  address: 'tcp://:80/'
+
 authentication_backend:
   file:
     path: /auth/users.yml
@@ -28,7 +31,7 @@ session:
 
 notifier:
   smtp:
-    startup_check_address: test@example.com
+    startup_check_address: test@6k2.ru
     address: smtp://smtp.yandex.ru:465
     username: andrey.muzhikov@6k2.ru
     sender: ТСЖ «Варшавская 6-2» <no-reply@6k2.ru>
