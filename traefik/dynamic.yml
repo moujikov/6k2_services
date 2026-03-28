@@ -32,7 +32,6 @@ http:
       redirectRegex:
         regex: ^https://(.*\.)?var62\.ru(/?.*)$
         replacement: https://${1}6k2.ru${2}
-        permanent: false
 
   routers:
     redirect-var62:
