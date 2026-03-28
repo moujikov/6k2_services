@@ -38,6 +38,7 @@ services:
     container_name: authelia
     image: authelia/authelia:4
     restart: unless-stopped
+    user: 1000:1000
     env_file: .env
     environment:
       AUTHELIA_STORAGE_POSTGRES_PASSWORD_FILE: /run/secrets/db_password_authelia
@@ -238,3 +239,7 @@ secrets:
     file: /usr/local/share/database/auth/db_password_postgres
   db_password_authelia:
     file: /usr/local/share/database/auth/db_password_authelia
+  authelia_session_secret:
+    file: /usr/local/share/authelia/keys/authelia_session_secret
+  authelia_storage_encryption_key:
+    file: /usr/local/share/authelia/keys/authelia_storage_encryption_key

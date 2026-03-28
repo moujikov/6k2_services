@@ -72,12 +72,17 @@ generate_secret() {
   fi
 }
 
+traefik_files='/usr/local/share/traefik'
+install -m 0755 -d "$traefik_files"
+install -m 0700 -d "$traefik_files/auth"
 
-install -m 0755 -d '/usr/local/share/traefik'
-install -m 0700 -d '/usr/local/share/traefik/auth'
+database_files='/usr/local/share/database'
+install -m 0755 -d "$database_files"
+install -m 0700 -d "$database_files/auth"
 
-install -m 0755 -d '/usr/local/share/database'
-install -m 0700 -d '/usr/local/share/database/auth'
+authelia_files='/usr/local/share/authelia'
+install -m 0755 -d "$authelia_files"
+install -m 0700 -d "$authelia_files/keys"
 
 
 DOCKER_USER='moujikov'
@@ -93,15 +98,18 @@ read -s -p "Provide Timeweb Clound auth token (empty to skip): " TIMEWEB_AUTH_TO
 echo
 
 if [ -n "$TIMEWEB_AUTH_TOKEN" ]; then
-  set_secret '/usr/local/share/traefik/auth/timeweb_auth_token' "$TIMEWEB_AUTH_TOKEN"
+  set_secret "$traefik_files/auth/timeweb_auth_token" "$TIMEWEB_AUTH_TOKEN"
   unset TIMEWEB_AUTH_TOKEN
 fi
 
-generate_secret '/usr/local/share/database/auth/db_password_postgres' 32 __postgres_  
-generate_secret '/usr/local/share/database/auth/db_password_authelia' 32 __authelia_ 0444
+ensure_secret_file "$traefik_files/auth/admins"
+ensure_secret_file "$traefik_files/auth/users"
 
-ensure_secret_file '/usr/local/share/traefik/auth/admins'
-ensure_secret_file '/usr/local/share/traefik/auth/users'
+generate_secret "$database_files/auth/db_password_postgres" 32 __postgres_  
+generate_secret "$database_files/auth/db_password_authelia" 32 __authelia_ 0444
+
+generate_secret "$authelia_files/keys/authelia_session_secret" 64 '' 0444
+generate_secret "$authelia_files/keys/authelia_storage_encryption_key" 64 '' 0444
 
 
 DIR="$( cd "$( dirname "$0" )" && pwd )"
