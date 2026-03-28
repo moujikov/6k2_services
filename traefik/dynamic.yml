@@ -30,7 +30,7 @@ http:
 
     redirect-var62:
       redirectRegex:
-        regex: ^https://(.*\\.)?var62\\.ru(/?.*)
+        regex: ^https://(.*\\.)?var62\\.ru(/?.*)$
         replacement: https://${1}6k2.ru${2}
         permanent: false
 
@@ -39,5 +39,5 @@ http:
       rule: >
         Host(`var62.ru`) ||
         HostRegexp(`^.*\.var62\.ru$`)
-      middlewares: redirect-var62
+      middlewares: [redirect-var62]
       service: noop@internal
