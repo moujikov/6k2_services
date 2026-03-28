@@ -27,6 +27,7 @@ http:
       ipAllowList:
         sourceRange:
           - 93.191.63.222/32
+          - 195.208.188.0/24
 
     redirect-var62:
       redirectRegex:
