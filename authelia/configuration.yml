@@ -34,3 +34,6 @@ notifier:
     sender: ТСЖ «Варшавская 6-2» <no-reply@6k2.ru>
     identifier: 6k2.ru
     subject: '[Authelia] {title}'
+
+log:
+  level: 'trace'
