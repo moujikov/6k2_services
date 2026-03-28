@@ -37,12 +37,12 @@ entryPoints:
               - '*.oss.var62.ru'
               - '*.osch.var62.ru'
               - '*.os4.var62.ru'
-          - main: xn--62-2lc.xn--p1ai             # 6к2.рф
+          - main: xn--62-2lc.xn--p1ai               # 6к2.рф
             sans:
               - '*.xn--62-2lc.xn--p1ai'             # *.6к2.рф
               - '*.xn--n1aga.xn--62-2lc.xn--p1ai'   # *.осс.6к2.рф
               - '*.xn--n1ags.xn--62-2lc.xn--p1ai'   # *.осч.6к2.рф
-          - main: xn--b1ayja.xn--p1ai             # восс.рф
+          - main: xn--b1ayja.xn--p1ai               # восс.рф
             sans:
               - '*.xn--b1ayja.xn--p1ai'             # *.восс.рф
 
