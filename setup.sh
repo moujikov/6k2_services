@@ -108,9 +108,9 @@ ensure_secret_file "$traefik_files/auth/users"
 generate_secret "$database_files/auth/db_password_postgres" 32 __postgres_  
 generate_secret "$database_files/auth/db_password_authelia" 32 __authelia_ 0444
 
-generate_secret "$authelia_files/keys/authelia_jwt_secret" 64 '' 0444
-generate_secret "$authelia_files/keys/authelia_session_secret" 64 '' 0444
 generate_secret "$authelia_files/keys/authelia_storage_encryption_key" 64 '' 0444
+generate_secret "$authelia_files/keys/authelia_session_secret" 64 '' 0444
+generate_secret "$authelia_files/keys/authelia_reset_password_secret" 64 '' 0444
 
 
 DIR="$( cd "$( dirname "$0" )" && pwd )"

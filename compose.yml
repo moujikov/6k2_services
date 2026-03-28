@@ -42,9 +42,9 @@ services:
     env_file: .env
     environment:
       AUTHELIA_STORAGE_POSTGRES_PASSWORD_FILE: /run/secrets/db_password_authelia
-      AUTHELIA_JWT_SECRET_FILE: /run/secrets/authelia_jwt_secret
-      AUTHELIA_SESSION_SECRET_FILE: /run/secrets/authelia_session_secret
       AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /run/secrets/authelia_storage_encryption_key
+      AUTHELIA_SESSION_SECRET_FILE: /run/secrets/authelia_session_secret
+      AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET_FILE: /run/secrets/authelia_reset_password_secret
     volumes:
       - ./authelia:/config:ro
     labels:
@@ -54,9 +54,10 @@ services:
         Host(`auth.6k2.ru`)
     secrets:
       - db_password_authelia
-      - authelia_jwt_secret
-      - authelia_session_secret
       - authelia_storage_encryption_key
+      - authelia_session_secret
+      - authelia_reset_password_secret
+
 
   database:
     container_name: database
@@ -240,9 +241,10 @@ secrets:
     file: /usr/local/share/database/auth/db_password_postgres
   db_password_authelia:
     file: /usr/local/share/database/auth/db_password_authelia
-  authelia_jwt_secret:
-    file: /usr/local/share/authelia/keys/authelia_jwt_secret
-  authelia_session_secret:
-    file: /usr/local/share/authelia/keys/authelia_session_secret
   authelia_storage_encryption_key:
     file: /usr/local/share/authelia/keys/authelia_storage_encryption_key
+  authelia_session_secret:
+    file: /usr/local/share/authelia/keys/authelia_session_secret
+  authelia_reset_password_secret:
+    file: /usr/local/share/authelia/keys/authelia_reset_password_secret
+
