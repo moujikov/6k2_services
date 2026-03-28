@@ -44,28 +44,43 @@ apt-get install -y --no-install-recommends \
 
 ### SETTING UP ENVIRONMENT
 
-ensure_secret_file() {  
-  local file="$1"
-  local permissions="${2:-0400}"
+DEFAULT_OWNERSHIP=1000:1000     # Owned and accessed by container mock user
+DEFAULT_PERMISSIONS=0440        # Readable by owner and group
 
-  [ -f "$file" ] || install -m "$permissions" /dev/null "$file"
+ensure_secret_file() {
+  local file="$1"
+  local ownership="${2:-$DEFAULT_OWNERSHIP}"
+  local permissions="${3:-$DEFAULT_PERMISSIONS}"
+  local owner="${ownership%:*}"
+  local group="${ownership#*:}"
+
+  [ -f "$file" ] || install -m "$permissions" -o "$owner" -g "$group" /dev/null "$file"
 }
 
 set_secret() {
-  install -m 0400 /dev/null "$1"
-  echo "$2" >> "$1"
+  local file="$1"
+  local content="$2"
+  local ownership="${3:-$DEFAULT_OWNERSHIP}"
+  local permissions="${4:-$DEFAULT_PERMISSIONS}"
+  local owner="${ownership%:*}"
+  local group="${ownership#*:}"
+
+  install -m "$permissions" -o "$owner" -g "$group" /dev/null "$file"
+  echo "$content" >> "$file"
 }
 
 generate_secret() {
   local file="$1"
   local length=${2:-16}
-  local prefix="${3:-}"
-  local permissions="${4:-0400}"
+  local ownership="${3:-$DEFAULT_OWNERSHIP}"
+  local permissions="${4:-$DEFAULT_PERMISSIONS}"
+  local owner="${ownership%:*}"
+  local group="${ownership#*:}"
 
   if [ -f "$file" ]; then
     echo "File '$file' already exists. Delete it to regenerate. Skipping..."
   else
-    install -m "$permissions" /dev/null "$file"
+    install -m "$permissions" -o "$owner" -g "$group" /dev/null "$file"
     printf "$prefix" >> "$file"
     (
       set +o pipefail   # Disable pipefail since cat will fail after SIGPIPE when head exits
@@ -74,6 +89,14 @@ generate_secret() {
     echo "Generated secret in '$file'"
   fi
 }
+
+timeweb_files='/usr/local/share/timeweb'
+install -m 0755 -d "$timeweb_files"
+install -m 0700 -d "$timeweb_files/auth"
+
+smtp_files='/usr/local/share/smtp'
+install -m 0755 -d "$smtp_files"
+install -m 0700 -d "$smtp_files/auth"
 
 traefik_files='/usr/local/share/traefik'
 install -m 0755 -d "$traefik_files"
@@ -92,7 +115,6 @@ install -m 0700 -d "$authelia_files/keys"
 DOCKER_USER='moujikov'
 read -s -p "Provide Docker Hub access token (empty to skip): " DOCKER_PAT
 echo
-
 if [ -n "$DOCKER_PAT" ]; then
   docker login --username "$DOCKER_USER" --password "$DOCKER_PAT"
   unset DOCKER_PAT
@@ -100,23 +122,29 @@ fi
 
 read -s -p "Provide Timeweb Clound auth token (empty to skip): " TIMEWEB_AUTH_TOKEN
 echo
-
 if [ -n "$TIMEWEB_AUTH_TOKEN" ]; then
-  set_secret "$traefik_files/auth/timeweb_auth_token" "$TIMEWEB_AUTH_TOKEN"
+  set_secret "$timeweb_files/auth/token" "$TIMEWEB_AUTH_TOKEN"
   unset TIMEWEB_AUTH_TOKEN
+fi
+
+read -s -p "Provide SMTP password for Authelia (empty to skip): " SMTP_PASSWORD_AUTHELIA
+echo
+if [ -n "$SMTP_PASSWORD_AUTHELIA" ]; then
+  set_secret "$smtp_files/auth/authelia_password" "$SMTP_PASSWORD_AUTHELIA"
+  unset SMTP_PASSWORD_AUTHELIA
 fi
 
 ensure_secret_file "$traefik_files/auth/admins"
 ensure_secret_file "$traefik_files/auth/users"
 
-generate_secret "$database_files/auth/db_password_postgres" 32 __postgres_  
-generate_secret "$database_files/auth/db_password_authelia" 32 __authelia_ 0444
+generate_secret "$database_files/auth/postgres_password" 32 70:70     # Read only by postgres
+generate_secret "$database_files/auth/authelia_password" 32 70:1000   # Read by postgres and authelia
 
-ensure_secret_file "$authelia_files/auth/users.yml" 0600
+ensure_secret_file "$authelia_files/auth/users.yml" '' 0640   # Read and writen by authelia
 
-generate_secret "$authelia_files/keys/authelia_storage_encryption_key" 64 '' 0444
-generate_secret "$authelia_files/keys/authelia_session_secret" 64 '' 0444
-generate_secret "$authelia_files/keys/authelia_reset_password_secret" 64 '' 0444
+generate_secret "$authelia_files/keys/authelia_storage_encryption_key" 64
+generate_secret "$authelia_files/keys/authelia_session_secret" 64
+generate_secret "$authelia_files/keys/authelia_reset_password_secret" 64
 
 
 DIR="$( cd "$( dirname "$0" )" && pwd )"

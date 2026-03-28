@@ -41,10 +41,12 @@ services:
     user: 1000:1000
     env_file: .env
     environment:
+      AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE: /run/secrets/smtp_password_authelia
       AUTHELIA_STORAGE_POSTGRES_PASSWORD_FILE: /run/secrets/db_password_authelia
       AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /run/secrets/authelia_storage_encryption_key
       AUTHELIA_SESSION_SECRET_FILE: /run/secrets/authelia_session_secret
-      AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET_FILE: /run/secrets/authelia_reset_password_secret
+      AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET_FILE: >
+        /run/secrets/authelia_reset_password_secret
     volumes:
       - ./authelia:/config:ro
       - /usr/local/share/authelia/auth/users.yml:/auth/users.yml:rw
@@ -54,10 +56,13 @@ services:
       traefik.http.routers.authelia.rule: >
         Host(`auth.6k2.ru`)
     secrets:
+      - smtp_password_authelia
       - db_password_authelia
       - authelia_storage_encryption_key
       - authelia_session_secret
       - authelia_reset_password_secret
+    depends_on:
+      - database
 
 
   database:
@@ -237,11 +242,13 @@ secrets:
   users:
     file: /usr/local/share/traefik/auth/users
   timeweb_auth_token:
-    file: /usr/local/share/traefik/auth/timeweb_auth_token
+    file: /usr/local/share/timeweb/auth/token
   db_password_postgres:
-    file: /usr/local/share/database/auth/db_password_postgres
+    file: /usr/local/share/database/auth/postgres_password
   db_password_authelia:
-    file: /usr/local/share/database/auth/db_password_authelia
+    file: /usr/local/share/database/auth/authelia_password
+  smpt_password_authelia:
+    file: /usr/local/share/smpt/auth/authelia_password
   authelia_storage_encryption_key:
     file: /usr/local/share/authelia/keys/authelia_storage_encryption_key
   authelia_session_secret:
