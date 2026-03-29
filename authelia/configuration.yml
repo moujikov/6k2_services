@@ -18,9 +18,10 @@ access_control:
       policy: one_factor
 
 session:
-  inactivity: 5m
-  expiration: 1h
-  remember_me: 1M
+  inactivity: 1y
+  expiration: 1y
+  remember_me: -1
+  name: auth_session
   cookies:
     - domain: 6k2.ru
       authelia_url: https://auth.6k2.ru
