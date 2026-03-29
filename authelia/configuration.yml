@@ -1,3 +1,6 @@
+server:
+  asset_path: /config/assets
+
 authentication_backend:
   file:
     path: /auth/users.yml
@@ -37,4 +40,4 @@ notifier:
     subject: '[Authelia] {title}'
 
 log:
-  level: 'trace'
+  level: 'info'
