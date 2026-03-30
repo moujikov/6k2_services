@@ -51,8 +51,6 @@ services:
       - /usr/local/share/authelia/auth/users.yml:/auth/users.yml:rw
     labels:
       traefik.enable: 'true'
-      traefik.http.services.authelia.loadbalancer.server.port: 9091
-      traefik.http.routers.authelia.service: authelia
       traefik.http.routers.authelia.rule: >
         Host(`auth.6k2.ru`)
     secrets:
