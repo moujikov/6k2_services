@@ -41,4 +41,4 @@ notifier:
     subject: '[Authelia] {title}'
 
 log:
-  level: 'trace'
+  level: info
