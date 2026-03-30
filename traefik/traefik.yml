@@ -18,6 +18,10 @@ entryPoints:
   websecure:
     address: ':443'
     asDefault: true
+    forwardedHeaders:
+      trustedIPs:
+        - 172.18.0.1        # Requests from within Docker network (SRC-NATed by Docker)
+        - 192.168.0.0/24    # Requests from private network (other VPSes)
     http:
       tls:
         certResolver: letsencrypt
