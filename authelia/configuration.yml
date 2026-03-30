@@ -1,4 +1,5 @@
 server:
+  host: tcp://:80
   asset_path: /config/assets
 
 authentication_backend:
@@ -40,4 +41,4 @@ notifier:
     subject: '[Authelia] {title}'
 
 log:
-  level: 'info'
+  level: 'trace'
