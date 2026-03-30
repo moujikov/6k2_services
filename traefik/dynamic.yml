@@ -24,7 +24,7 @@ http:
 
     authelia:
       forwardAuth:
-        address: https://authelia/api/authz/forward-auth
+        address: http://authelia/api/authz/forward-auth
         maxResponseBodySize: 4096
         authResponseHeaders: [ Remote-User, Remote-Groups, Remote-Name, Remote-Email ]
 
