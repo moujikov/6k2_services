@@ -49,7 +49,7 @@ services:
     volumes:
       - ./authelia:/config:ro
       - /usr/local/share/authelia/auth/users.yml:/auth/users.yml:rw
-    expose: 80
+    expose: [ 80 ]
     labels:
       traefik.enable: 'true'
       traefik.http.routers.authelia.rule: >
