@@ -53,7 +53,6 @@ services:
       traefik.enable: 'true'
       traefik.http.services.authelia.loadbalancer.server.port: 9091
       traefik.http.routers.authelia.service: authelia
-      traefik.http.routers.authelia.middlewares: ip-whitelist@file
       traefik.http.routers.authelia.rule: >
         Host(`auth.6k2.ru`)
     secrets:
@@ -144,7 +143,7 @@ services:
       traefik.enable: 'true'
       traefik.http.services.glances.loadbalancer.server.port: 61208
       traefik.http.routers.glances.service: glances
-      traefik.http.routers.glances.middlewares: ip-whitelist@file, authelia@file
+      traefik.http.routers.glances.middlewares: authelia@file
       traefik.http.routers.glances.rule: >
         Host(`glances.6k2.ru`)
 
@@ -156,6 +155,7 @@ services:
     env_file: .env
     labels:
       traefik.enable: 'true'
+      traefik.http.routers.oss-2021.middlewares: authelia@file
       traefik.http.routers.oss-2021.rule: >
         Host(`2021.oss.6k2.ru`) || 
         Host(`2021.xn--n1aga.xn--62-2lc.xn--p1ai`) ||

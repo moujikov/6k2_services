@@ -16,11 +16,10 @@ http:
       digestAuth:
         removeHeader: true
         usersFile: /run/secrets/users
-        
+
     authelia:
       forwardAuth:
-        address: http://authelia:9091/api/authz/forward-auth
-        trustForwardHeader: true
+        address: https://auth.6k2.ru/api/authz/forward-auth
         authResponseHeaders: [ Remote-User, Remote-Groups, Remote-Name, Remote-Email ]
 
     ip-whitelist:
