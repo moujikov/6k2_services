@@ -16,10 +16,27 @@ storage:
     username: authelia
 
 access_control:
-  default_policy: deny
   rules:
+    - domain:
+      - 'oss.6k2.ru'
+      - '*.oss.6k2.ru'
+      - 'xn--b1ayja.xn--p1ai'           # восс.рф
+      - '*.xn--b1ayja.xn--p1ai'         # *.восс.рф
+      resources:
+        - '^/-$'
+        - '^/-/'
+      policy: one_factor
+    - domain:
+      - 'oss.6k2.ru'
+      - '*.oss.6k2.ru'
+      - 'xn--b1ayja.xn--p1ai'           # восс.рф
+      - '*.xn--b1ayja.xn--p1ai'         # *.восс.рф
+      policy: bypass
     - domain: '*.6k2.ru'
       policy: one_factor
+    - domain: '*.xn--b1ayja.xn--p1ai'   # *.восс.рф
+      policy: one_factor
+  default_policy: deny
 
 session:
   inactivity: 1y
@@ -30,6 +47,9 @@ session:
     - domain: 6k2.ru
       authelia_url: https://auth.6k2.ru
       default_redirection_url: https://6k2.ru
+    - domain: xn--b1ayja.xn--p1ai                             # восс.рф
+      authelia_url: https://xn--c1akhkc.xn--b1ayja.xn--p1ai   # логин.восс.рф
+      default_redirection_url: https://xn--b1ayja.xn--p1ai    # восс.рф
 
 notifier:
   smtp:

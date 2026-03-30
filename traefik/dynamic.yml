@@ -6,6 +6,11 @@ http:
         middlewares:
           - ip-whitelist
           - admin-auth
+          
+    auth:
+      chain:
+        middlewares:
+          - authelia
 
     admin-auth:
       digestAuth:
@@ -19,7 +24,7 @@ http:
 
     authelia:
       forwardAuth:
-        address: https://auth.6k2.ru/api/authz/forward-auth
+        address: https://authelia/api/authz/forward-auth
         maxResponseBodySize: 4096
         authResponseHeaders: [ Remote-User, Remote-Groups, Remote-Name, Remote-Email ]
 
