@@ -54,6 +54,7 @@ services:
       traefik.enable: 'true'
       traefik.http.routers.authelia.rule: >
         Host(`auth.6k2.ru`) ||
+        Host(`xn--c1akhkc.xn--62-2lc.xn--p1ai`) ||
         Host(`xn--c1akhkc.xn--b1ayja.xn--p1ai`)
     secrets:
       - smtp_password_authelia
