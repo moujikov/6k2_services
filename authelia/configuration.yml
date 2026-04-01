@@ -2,6 +2,7 @@ server:
   address: tcp://:80/
   asset_path: /config/assets
 
+
 authentication_backend:
   file:
     path: /auth/users.yml
@@ -9,34 +10,53 @@ authentication_backend:
     search:
       email: true
 
+
 storage:
   postgres:
     address: tcp://database:5432
     database: authelia
     username: authelia
 
+
 access_control:
   rules:
-    - domain:
-      - 'oss.6k2.ru'
-      - '*.oss.6k2.ru'
-      - 'xn--b1ayja.xn--p1ai'           # восс.рф
-      - '*.xn--b1ayja.xn--p1ai'         # *.восс.рф
+
+    - policy: one_factor                      # Require authentication
       resources:
-        - ^/-$
+        - ^/-$                                # only in private area
         - ^/-/
-      policy: one_factor
-    - domain:
-      - 'oss.6k2.ru'
-      - '*.oss.6k2.ru'
-      - 'xn--b1ayja.xn--p1ai'           # восс.рф
-      - '*.xn--b1ayja.xn--p1ai'         # *.восс.рф
-      policy: bypass
-    - domain: '*.6k2.ru'
-      policy: one_factor
-    - domain: '*.xn--b1ayja.xn--p1ai'   # *.восс.рф
-      policy: one_factor
-  default_policy: deny
+      domain:                                 # in domains:
+        - 'oss.6k2.ru'                        #   oss.6k2.ru
+        - '*.oss.6k2.ru'                      #   *.oss.6k2.ru
+        - 'os4.6k2.ru'                        #   os4.6k2.ru
+        - '*.os4.6k2.ru'                      #   *.os4.6k2.ru
+        - 'xn--b1ayja.xn--p1ai'               #   восс.рф
+        - '*.xn--b1ayja.xn--p1ai'             #   *.восс.рф
+        - 'xn--n1aga.xn--62-2lc.xn--p1ai'     #   осс.6к2.рф
+        - '*.xn--n1aga.xn--62-2lc.xn--p1ai'   #   *.осс.6к2.рф
+        - 'xn--n1ags.xn--62-2lc.xn--p1ai'     #   осч.6к2.рф
+        - '*.xn--n1ags.xn--62-2lc.xn--p1ai'   #   *.осч.6к2.рф
+        
+    - policy: bypass                          # Allow public access everywhere else
+      domain:                                 # in domains:
+        - 'oss.6k2.ru'                        #   oss.6k2.ru
+        - '*.oss.6k2.ru'                      #   *.oss.6k2.ru
+        - 'os4.6k2.ru'                        #   os4.6k2.ru
+        - '*.os4.6k2.ru'                      #   *.os4.6k2.ru
+        - 'xn--b1ayja.xn--p1ai'               #   восс.рф
+        - '*.xn--b1ayja.xn--p1ai'             #   *.восс.рф
+        - 'xn--n1aga.xn--62-2lc.xn--p1ai'     #   осс.6к2.рф
+        - '*.xn--n1aga.xn--62-2lc.xn--p1ai'   #   *.осс.6к2.рф
+        - 'xn--n1ags.xn--62-2lc.xn--p1ai'     #   осч.6к2.рф
+        - '*.xn--n1ags.xn--62-2lc.xn--p1ai'   #   *.осч.6к2.рф
+
+    - policy: one_factor                      # Require authentication by default
+      domain:                                 # in all direct subdomains:
+        - '*.6k2.ru'                          #   *.6k2.ru
+        - '*.xn--62-2lc.xn--p1ai'             #   *.6к2.рф
+  
+  default_policy: deny                        # Deny access if no explicit match
+
 
 regulation:
   modes: [ user, ip ]
@@ -44,18 +64,25 @@ regulation:
   find_time: 2m
   ban_time: 5m
 
+
 session:
   inactivity: 1y
   expiration: 1y
   remember_me: -1
   name: auth_session
   cookies:
-    - domain: 6k2.ru
-      authelia_url: https://auth.6k2.ru
-      default_redirection_url: https://6k2.ru
+    - domain: 6k2.ru                                          # 6k2.ru
+      authelia_url: https://auth.6k2.ru                       # auth.6k2.ru
+      default_redirection_url: https://6k2.ru                 # 6k2.ru
+      
+    - domain: xn--62-2lc.xn--p1ai                             # 6к2.рф
+      authelia_url: https://xn--c1akhkc.xn--62-2lc.xn--p1ai   # логин.6к2.рф
+      default_redirection_url: https://xn--62-2lc.xn--p1ai    # 6к2.рф
+
     - domain: xn--b1ayja.xn--p1ai                             # восс.рф
       authelia_url: https://xn--c1akhkc.xn--b1ayja.xn--p1ai   # логин.восс.рф
       default_redirection_url: https://xn--b1ayja.xn--p1ai    # восс.рф
+
 
 notifier:
   smtp:
@@ -65,6 +92,7 @@ notifier:
     sender: ТСЖ «Варшавская 6-2» <no-reply@6k2.ru>
     identifier: 6k2.ru
     subject: '[Authelia] {title}'
+
 
 log:
   level: info
