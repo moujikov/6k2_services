@@ -23,8 +23,8 @@ access_control:
       - 'xn--b1ayja.xn--p1ai'           # восс.рф
       - '*.xn--b1ayja.xn--p1ai'         # *.восс.рф
       resources:
-        - '^/-$'
-        - '^/-/'
+        - ^/-$
+        - ^/-/
       policy: one_factor
     - domain:
       - 'oss.6k2.ru'

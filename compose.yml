@@ -155,7 +155,7 @@ services:
     env_file: .env
     labels:
       traefik.enable: 'true'
-      traefik.http.routers.oss-2021.middlewares: auth@file
+      traefik.http.routers.oss-2021.middlewares: ip-whitelist@file, auth@file
       traefik.http.routers.oss-2021.rule: >
         Host(`2021.oss.6k2.ru`) || 
         Host(`2021.xn--n1aga.xn--62-2lc.xn--p1ai`) ||
