@@ -106,6 +106,10 @@ database_files='/usr/local/share/database'
 install -m 0755 -d "$database_files"
 install -m 0700 -d "$database_files/auth"
 
+redis_files='/usr/local/share/redis'
+install -m 0755 -d "$redis_files"
+install -m 0700 -d "$redis_files/auth"
+
 authelia_files='/usr/local/share/authelia'
 install -m 0755 -d "$authelia_files"
 install -m 0700 -d "$authelia_files/auth"
@@ -120,7 +124,7 @@ if [ -n "$DOCKER_PAT" ]; then
   unset DOCKER_PAT
 fi
 
-read -s -p "Provide Timeweb Clound auth token (empty to skip): " TIMEWEB_AUTH_TOKEN
+read -s -p "Provide Timeweb Cloud auth token (empty to skip): " TIMEWEB_AUTH_TOKEN
 echo
 if [ -n "$TIMEWEB_AUTH_TOKEN" ]; then
   set_secret "$timeweb_files/auth/token" "$TIMEWEB_AUTH_TOKEN"
@@ -140,9 +144,25 @@ ensure_secret_file "$traefik_files/auth/users"
 generate_secret "$database_files/auth/postgres_password" 32 70:70     # Read only by postgres
 generate_secret "$database_files/auth/authelia_password" 32 70:1000   # Read by postgres and authelia
 
-ensure_secret_file "$authelia_files/auth/users.yml" '' 0640   # Read and writen by authelia
+generate_secret "$redis_files/auth/redis_password" 32 1001:1000       # Read by redis and authelia
 
-generate_secret "$authelia_files/keys/authelia_storage_encryption_key" 64
+ensure_secret_file "$authelia_files/auth/users.yml" '' 0640           # Read and writen by authelia
+
+
+authelia_storage_encryption_key="$authelia_files/keys/authelia_storage_encryption_key"
+if [ -f "$authelia_storage_encryption_key" ]; then
+  echo "File '$authelia_storage_encryption_key' already exists. Delete it to regenerate. Skipping..."
+else
+  read -s -p "Provide Authelia storage encryption key (empty to generate): " AUTHELIA_STORAGE_ENCRYPTION_KEY
+  echo
+  if [ -n "$AUTHELIA_STORAGE_ENCRYPTION_KEY" ]; then
+    set_secret "$authelia_storage_encryption_key" "$AUTHELIA_STORAGE_ENCRYPTION_KEY"
+    unset AUTHELIA_STORAGE_ENCRYPTION_KEY
+  else
+    generate_secret "$authelia_storage_encryption_key" 64
+  fi
+fi
+
 generate_secret "$authelia_files/keys/authelia_session_secret" 64
 generate_secret "$authelia_files/keys/authelia_reset_password_secret" 64
 

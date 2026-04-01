@@ -92,6 +92,20 @@ services:
           memory: 1G
 
 
+  redis:
+    container_name: redis
+    image: bitnami/redis
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - REDIS_PASSWORD_FILE=/run/secrets/redis_password
+    volumes:
+      - ./redis/redis.conf:/opt/bitnami/redis/etc/redis.conf:ro
+      - redis_data:/bitnami/redis/data
+    secrets:
+      - redis_password
+
+
   watchtower:
     container_name: watchtower
     image: nickfedor/watchtower
@@ -103,8 +117,8 @@ services:
       WATCHTOWER_LABEL_ENABLE: true
       WATCHTOWER_LOG_LEVEL: warn
     volumes:
+      - /root/.docker/config.json:/config.json:ro
       - /var/run/docker.sock:/var/run/docker.sock
-      - /root/.docker/config.json:/config.json
 
 
   portainer:
@@ -135,6 +149,7 @@ services:
     volumes:
       - /:/rootfs:ro
       - database:/database:ro
+      - redis_data:/redis_data:ro
       - portainer_data:/portainer_data:ro
       - utility-bills_data:/utility-bills_data:ro
       - ./glances:/etc/glances:ro
@@ -235,6 +250,7 @@ services:
 volumes:
   certificates:
   database:
+  redis_data:
   portainer_data:
   utility-bills_data:
 
@@ -250,6 +266,8 @@ secrets:
     file: /usr/local/share/database/auth/postgres_password
   db_password_authelia:
     file: /usr/local/share/database/auth/authelia_password
+  redis_password:
+    file: /usr/local/share/database/auth/redis_password
   smtp_password_authelia:
     file: /usr/local/share/smtp/auth/authelia_password
   authelia_storage_encryption_key:
