@@ -95,4 +95,4 @@ notifier:
 
 
 log:
-  level: info
+  level: warn
