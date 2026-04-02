@@ -98,10 +98,6 @@ smtp_files='/usr/local/share/smtp'
 install -m 0755 -d "$smtp_files"
 install -m 0700 -d "$smtp_files/auth"
 
-traefik_files='/usr/local/share/traefik'
-install -m 0755 -d "$traefik_files"
-install -m 0700 -d "$traefik_files/auth"
-
 database_files='/usr/local/share/database'
 install -m 0755 -d "$database_files"
 install -m 0700 -d "$database_files/auth"
@@ -135,8 +131,6 @@ if [ -n "$SMTP_PASSWORD_AUTHELIA" ]; then
   set_secret "$smtp_files/auth/authelia_password" "$SMTP_PASSWORD_AUTHELIA"
 fi
 
-ensure_secret_file "$traefik_files/auth/admins"
-ensure_secret_file "$traefik_files/auth/users"
 
 generate_secret "$database_files/auth/postgres_password" 32 70:70     # Read only by postgres
 generate_secret "$database_files/auth/authelia_password" 32 70:1000   # Read by postgres and authelia

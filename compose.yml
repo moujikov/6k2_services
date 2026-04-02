@@ -256,10 +256,6 @@ volumes:
 
 
 secrets:
-  admins:
-    file: /usr/local/share/traefik/auth/admins
-  users:
-    file: /usr/local/share/traefik/auth/users
   timeweb_auth_token:
     file: /usr/local/share/timeweb/auth/token
   db_password_postgres:
@@ -267,7 +263,7 @@ secrets:
   db_password_authelia:
     file: /usr/local/share/database/auth/authelia_password
   redis_password:
-    file: /usr/local/share/database/auth/redis_password
+    file: /usr/local/share/redis/auth/redis_password
   smtp_password_authelia:
     file: /usr/local/share/smtp/auth/authelia_password
   authelia_storage_encryption_key:

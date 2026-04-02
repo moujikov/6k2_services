@@ -1,26 +1,10 @@
 http:
 
   middlewares:
-    restricted:
-      chain:
-        middlewares:
-          - ip-whitelist
-          - admin-auth
-          
     auth:
       chain:
         middlewares:
           - authelia
-
-    admin-auth:
-      digestAuth:
-        removeHeader: true
-        usersFile: /run/secrets/admins
-
-    user-auth:
-      digestAuth:
-        removeHeader: true
-        usersFile: /run/secrets/users
 
     authelia:
       forwardAuth:

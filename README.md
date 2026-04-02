@@ -20,13 +20,4 @@
    ```
    /opt/services/setup.sh
    ```
-   Provide Docker Hub access token and Timeweb Cloud auth token when prompted.
-
-6. Add admins with:
-   ```
-   htdigest /usr/local/share/traefik/auth/admins traefik USER_NAME
-   ```
-   Add users with:
-   ```
-   htdigest /usr/local/share/traefik/auth/users traefik USER_NAME
-   ```
+   Provide Docker Hub access token and other secrets when prompted.
