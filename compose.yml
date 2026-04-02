@@ -91,7 +91,7 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1G
+          memory: 512mb
 
 
   redis:
@@ -115,6 +115,10 @@ services:
       retries: 3
       start_period: 10s
       start_interval: 1s
+    deploy:
+      resources:
+        limits:
+          memory: 512mb
 
 
   watchtower:
