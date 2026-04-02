@@ -30,7 +30,6 @@ services:
       traefik.http.routers.traefik.rule: >
         Host(`traefik.6k2.ru`)
     secrets:
-      - admins
       - timeweb_auth_token
 
 
