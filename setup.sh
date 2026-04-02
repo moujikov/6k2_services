@@ -135,7 +135,7 @@ fi
 generate_secret "$database_files/auth/postgres_password" 32 70:70     # Read only by postgres
 generate_secret "$database_files/auth/authelia_password" 32 70:1000   # Read by postgres and authelia
 
-generate_secret "$redis_files/auth/redis_password" 32 1001:1000       # Read by redis and authelia
+generate_secret "$redis_files/auth/redis_password" 64 1001:1000       # Read by redis and authelia
 
 ensure_secret_file "$authelia_files/auth/users.yml" '' 0640           # Read and writen by authelia
 

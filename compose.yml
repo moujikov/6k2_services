@@ -40,10 +40,11 @@ services:
     user: 1000:1000
     env_file: .env
     environment:
-      AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE: /run/secrets/smtp_password_authelia
       AUTHELIA_STORAGE_POSTGRES_PASSWORD_FILE: /run/secrets/db_password_authelia
       AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /run/secrets/authelia_storage_encryption_key
+      AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE: /run/secrets/smtp_password_authelia
       AUTHELIA_SESSION_SECRET_FILE: /run/secrets/authelia_session_secret
+      AUTHELIA_SESSION_REDIS_PASSWORD_FILE: /run/secrets/redis_password
       AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET_FILE: /run/secrets/authelia_reset_password_secret
     volumes:
       - ./authelia:/config:ro
@@ -56,13 +57,15 @@ services:
         Host(`xn--c1akhkc.xn--62-2lc.xn--p1ai`) ||
         Host(`xn--c1akhkc.xn--b1ayja.xn--p1ai`)
     secrets:
-      - smtp_password_authelia
       - db_password_authelia
+      - redis_password
+      - smtp_password_authelia
       - authelia_storage_encryption_key
       - authelia_session_secret
       - authelia_reset_password_secret
     depends_on:
       - database
+      - redis
 
 
   database:

@@ -70,6 +70,8 @@ session:
   expiration: 1y
   remember_me: -1
   name: auth_session
+  redis:
+    host: redis
   cookies:
     - domain: 6k2.ru                                          # 6k2.ru
       authelia_url: https://auth.6k2.ru                       # auth.6k2.ru
