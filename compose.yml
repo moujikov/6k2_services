@@ -243,8 +243,6 @@ services:
       traefik.enable: 'true'
       traefik.http.routers.alt-chat.rule: >
         Host(`a4.6k2.ru`)
-    secrets:
-      - users
 
 volumes:
   certificates:
