@@ -121,21 +121,18 @@ read -s -p "Provide Docker Hub access token (empty to skip): " DOCKER_PAT
 echo
 if [ -n "$DOCKER_PAT" ]; then
   docker login --username "$DOCKER_USER" --password "$DOCKER_PAT"
-  unset DOCKER_PAT
 fi
 
 read -s -p "Provide Timeweb Cloud auth token (empty to skip): " TIMEWEB_AUTH_TOKEN
 echo
 if [ -n "$TIMEWEB_AUTH_TOKEN" ]; then
   set_secret "$timeweb_files/auth/token" "$TIMEWEB_AUTH_TOKEN"
-  unset TIMEWEB_AUTH_TOKEN
 fi
 
 read -s -p "Provide SMTP password for Authelia (empty to skip): " SMTP_PASSWORD_AUTHELIA
 echo
 if [ -n "$SMTP_PASSWORD_AUTHELIA" ]; then
   set_secret "$smtp_files/auth/authelia_password" "$SMTP_PASSWORD_AUTHELIA"
-  unset SMTP_PASSWORD_AUTHELIA
 fi
 
 ensure_secret_file "$traefik_files/auth/admins"
@@ -157,7 +154,9 @@ else
   echo
   if [ -n "$AUTHELIA_STORAGE_ENCRYPTION_KEY" ]; then
     set_secret "$authelia_storage_encryption_key" "$AUTHELIA_STORAGE_ENCRYPTION_KEY"
-    unset AUTHELIA_STORAGE_ENCRYPTION_KEY
+    echo "Save Authelia storage encryption key in a safe place:"
+    echo "  $AUTHELIA_STORAGE_ENCRYPTION_KEY"
+    echo "It will be required to decrypt Authelia database in case of migration or recovery."
   else
     generate_secret "$authelia_storage_encryption_key" 64
   fi
