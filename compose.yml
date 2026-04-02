@@ -191,6 +191,10 @@ services:
         Host(`2021.oss.6k2.ru`) || 
         Host(`2021.xn--n1aga.xn--62-2lc.xn--p1ai`) ||
         Host(`2021.xn--b1ayja.xn--p1ai`)
+    deploy:
+      resources:
+        limits:
+          memory: 128mb
 
 
   oss-2023:
@@ -208,7 +212,10 @@ services:
         Host(`2023.xn--n1aga.xn--62-2lc.xn--p1ai`) || 
         Host(`xn--b1ayja.xn--p1ai`) || 
         Host(`2023.xn--b1ayja.xn--p1ai`)
-
+    deploy:
+      resources:
+        limits:
+          memory: 128mb
 
   osch-2024:
     container_name: osch-2024
@@ -220,7 +227,10 @@ services:
       traefik.http.routers.osch-2024.rule: >
         Host(`2024.os4.6k2.ru`) || 
         Host(`2024.xn--n1ags.xn--62-2lc.xn--p1ai`)
-
+    deploy:
+      resources:
+        limits:
+          memory: 128mb
 
   osch-2025:
     container_name: osch-2025
@@ -234,7 +244,10 @@ services:
         Host(`2025.os4.6k2.ru`) || 
         Host(`xn--n1ags.xn--62-2lc.xn--p1ai`) ||
         Host(`2025.xn--n1ags.xn--62-2lc.xn--p1ai`)
-
+    deploy:
+      resources:
+        limits:
+          memory: 128mb
 
   utility-bills:
     container_name: utility-bills
@@ -259,7 +272,12 @@ services:
       traefik.enable: 'true'
       traefik.http.routers.alt-chat.rule: >
         Host(`a4.6k2.ru`)
+    deploy:
+      resources:
+        limits:
+          memory: 128mb
 
+          
 volumes:
   certificates:
   database:
