@@ -14,7 +14,7 @@ ARCH=$(dpkg --print-architecture)
 OS_RELEASE=$(. /etc/os-release && echo $VERSION_CODENAME)
 
 
-### INSTALLING PACKAGES
+#######################  INSTALLING PACKAGES  #######################
 
 apt-get update
 apt-get install -y --no-install-recommends \
@@ -42,7 +42,7 @@ apt-get install -y --no-install-recommends \
   docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 
-### SETTING UP ENVIRONMENT
+#######################  SETTING UP ENVIRONMENT  #######################
 
 DEFAULT_OWNERSHIP=1000:1000     # Owned and accessed by container mock user
 DEFAULT_PERMISSIONS=0440        # Readable by owner and group
@@ -144,6 +144,9 @@ generate_secret "$database_files/auth/postgres_password" 32 70:70     # Read onl
 generate_secret "$database_files/auth/authelia_password" 32 70:1000   # Read by postgres and authelia
 generate_secret "$database_files/auth/lldap_password" 32 70:1000      # Read by postgres and lldap
 
+lldap_database_url="postgres://lldap:$(cat $database_files/auth/lldap_password)@database/lldap"
+set_secret "$database_files/auth/lldap_url.env" "LLDAP_DATABASE_URL='$lldap_database_url'"
+
 generate_secret "$redis_files/auth/redis_password" 64 1001:1000       # Read by redis and authelia
 
 ensure_secret_file "$authelia_files/auth/users.yml" '' 0640           # Read and writen by authelia
@@ -170,7 +173,10 @@ generate_secret "$authelia_files/keys/reset_password_secret" 64
 
 generate_secret "$lldap_files/keys/key_seed" 64
 generate_secret "$lldap_files/keys/jwt_secret" 64
+generate_secret "$lldap_files/auth/admin_password" 16
 
+
+#######################  STARTING SERVICES  #######################
 
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 docker compose --file "$DIR/compose.yml" up --detach

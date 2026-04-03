@@ -21,3 +21,5 @@
    /opt/services/setup.sh
    ```
    Provide Docker Hub access token and other secrets when prompted.
+
+6. Login to LLDAP at https://users.6k2.ru with user `admin` and password from: `/usr/local/share/services/lldap/auth/ldap_user_pass`

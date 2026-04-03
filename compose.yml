@@ -77,6 +77,34 @@ services:
           memory: 128mb
 
 
+  lldap:
+    container_name: lldap
+    image: lldap/lldap:stable-alpine-rootless
+    restart: unless-stopped
+    env_file:
+      - .env
+      - /usr/local/share/services/database/auth/lldap_url.env
+    environment:
+      LLDAP_KEY_SEED_FILE: /run/secrets/lldap_key_seed
+      LLDAP_JWT_SECRET_FILE: /run/secrets/lldap_jwt_secret
+      LLDAP_LDAP_USER_PASS_FILE: /run/secrets/lldap_admin_password
+      LLDAP_LDAP_BASE_DN: dc=6k2,dc=ru
+    secrets:
+      - lldap_key_seed
+      - lldap_jwt_secret
+      - lldap_admin_password
+    expose: [ 17170 ]   # Web front-end 
+    labels:
+      traefik.enable: 'true'
+      traefik.http.routers.lldap.middlewares: ip-whitelist@file
+      traefik.http.routers.lldap.rule: >
+        Host(`users.6k2.ru`)
+    deploy:
+      resources:
+        limits:
+          memory: 128mb
+
+
   database:
     container_name: database
     image: postgres:18-alpine
@@ -283,6 +311,10 @@ services:
       traefik.enable: 'true'
       traefik.http.routers.utility-bills.rule: >
         Host(`bills.6k2.ru`)
+    deploy:
+      resources:
+        limits:
+          memory: 256mb
 
 
   alt-chat:
@@ -304,7 +336,6 @@ services:
 volumes:
   certificates:
   database:
-  lldap_data:
   portainer_data:
   redis_data:
   utility-bills_data:
@@ -333,5 +364,5 @@ secrets:
     file: /usr/local/share/services/lldap/keys/key_seed
   lldap_jwt_secret:
     file: /usr/local/share/services/lldap/keys/jwt_secret
-  lldap_ldap_user_pass:
-    file: /usr/local/share/services/lldap/auth/ldap_user_pass
+  lldap_admin_password:
+    file: /usr/local/share/services/lldap/auth/admin_password
