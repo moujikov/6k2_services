@@ -90,6 +90,8 @@ services:
       LLDAP_JWT_SECRET_FILE: /run/secrets/lldap_jwt_secret
       LLDAP_LDAP_USER_PASS_FILE: /run/secrets/lldap_admin_password
       LLDAP_LDAP_BASE_DN: dc=6k2,dc=ru
+    volumes:
+      - ./lldap/lldap_config.toml:/data/lldap_config.toml:ro
     secrets:
       - lldap_key_seed
       - lldap_jwt_secret
