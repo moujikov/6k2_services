@@ -161,7 +161,6 @@ services:
     expose: [ 9000 ]   # Web front-end 
     labels:
       traefik.enable: 'true'
-      traefik.http.routers.portainer.service: portainer
       traefik.http.routers.portainer.middlewares: ip-whitelist@file
       traefik.http.routers.portainer.rule: >
         Host(`portainer.6k2.ru`)
@@ -191,7 +190,6 @@ services:
     expose: [ 61208 ]   # Web front-end 
     labels:
       traefik.enable: 'true'
-      traefik.http.routers.glances.service: glances
       traefik.http.routers.glances.middlewares: auth@file
       traefik.http.routers.glances.rule: >
         Host(`glances.6k2.ru`)
