@@ -8,7 +8,7 @@ create_db_and_user() {
 	local PASSWORD="$(< /run/secrets/db_password_$USER)"
 
 	psql -v ON_ERROR_STOP=1 --username postgres <<-EOSQL
-	DO $create_db_and_user$ BEGIN
+	DO \$create_db_and_user\$ BEGIN
 		IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = $USER) THEN
 			CREATE USER $USER WITH PASSWORD '$PASSWORD';
 		END IF;
@@ -16,7 +16,7 @@ create_db_and_user() {
 		IF NOT EXISTS (SELECT FROM pg_database WHERE datname = $DATABASE) THEN
 			CREATE DATABASE $DATABASE WITH OWNER $USER;
 		END IF;
-	END $create_db_and_user$;
+	END \$create_db_and_user\$;
 	EOSQL
 }
 
