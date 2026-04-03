@@ -85,6 +85,7 @@ services:
       - .env
       - /usr/local/share/services/database/auth/lldap_url.env
     environment:
+      RUST_LOG: warn
       LLDAP_KEY_SEED_FILE: /run/secrets/lldap_key_seed
       LLDAP_JWT_SECRET_FILE: /run/secrets/lldap_jwt_secret
       LLDAP_LDAP_USER_PASS_FILE: /run/secrets/lldap_admin_password
