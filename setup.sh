@@ -90,26 +90,34 @@ generate_secret() {
   fi
 }
 
-timeweb_files='/usr/local/share/timeweb'
-install -m 0755 -d "$timeweb_files"
-install -m 0700 -d "$timeweb_files/auth"
+services_files='/usr/local/share/services'
+install -m 0755 -d "$services_files"
 
-smtp_files='/usr/local/share/smtp'
-install -m 0755 -d "$smtp_files"
-install -m 0700 -d "$smtp_files/auth"
-
-database_files='/usr/local/share/database'
+database_files="$services_files/database"
 install -m 0755 -d "$database_files"
 install -m 0700 -d "$database_files/auth"
 
-redis_files='/usr/local/share/redis'
+redis_files="$services_files/redis"
 install -m 0755 -d "$redis_files"
 install -m 0700 -d "$redis_files/auth"
 
-authelia_files='/usr/local/share/authelia'
+authelia_files="$services_files/authelia"
 install -m 0755 -d "$authelia_files"
 install -m 0700 -d "$authelia_files/auth"
 install -m 0700 -d "$authelia_files/keys"
+
+lldap_files="$services_files/lldap"
+install -m 0755 -d "$lldap_files"
+install -m 0700 -d "$lldap_files/auth"
+install -m 0700 -d "$lldap_files/keys"
+
+timeweb_files="$services_files/timeweb"
+install -m 0755 -d "$timeweb_files"
+install -m 0700 -d "$timeweb_files/auth"
+
+smtp_files="$services_files/smtp"
+install -m 0755 -d "$smtp_files"
+install -m 0700 -d "$smtp_files/auth"
 
 
 DOCKER_USER='moujikov'
@@ -134,13 +142,14 @@ fi
 
 generate_secret "$database_files/auth/postgres_password" 32 70:70     # Read only by postgres
 generate_secret "$database_files/auth/authelia_password" 32 70:1000   # Read by postgres and authelia
+generate_secret "$database_files/auth/lldap_password" 32 70:1000      # Read by postgres and lldap
 
 generate_secret "$redis_files/auth/redis_password" 64 1001:1000       # Read by redis and authelia
 
 ensure_secret_file "$authelia_files/auth/users.yml" '' 0640           # Read and writen by authelia
 
 
-authelia_storage_encryption_key="$authelia_files/keys/authelia_storage_encryption_key"
+authelia_storage_encryption_key="$authelia_files/keys/storage_encryption_key"
 if [ -f "$authelia_storage_encryption_key" ]; then
   echo "File '$authelia_storage_encryption_key' already exists. Delete it to regenerate. Skipping..."
 else
@@ -156,8 +165,11 @@ else
   fi
 fi
 
-generate_secret "$authelia_files/keys/authelia_session_secret" 64
-generate_secret "$authelia_files/keys/authelia_reset_password_secret" 64
+generate_secret "$authelia_files/keys/session_secret" 64
+generate_secret "$authelia_files/keys/reset_password_secret" 64
+
+generate_secret "$lldap_files/keys/key_seed" 64
+generate_secret "$lldap_files/keys/jwt_secret" 64
 
 
 DIR="$( cd "$( dirname "$0" )" && pwd )"

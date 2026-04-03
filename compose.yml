@@ -15,6 +15,8 @@ services:
       - certificates:/usr/local/share/traefik/certs
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik:/etc/traefik:ro
+    secrets:
+      - timeweb_auth_token
     labels:
       traefik.enable: 'true'
       
@@ -29,8 +31,10 @@ services:
       traefik.http.routers.traefik.middlewares: ip-whitelist@file, auth@file
       traefik.http.routers.traefik.rule: >
         Host(`traefik.6k2.ru`)
-    secrets:
-      - timeweb_auth_token
+    deploy:
+      resources:
+        limits:
+          memory: 128mb
 
 
   authelia:
@@ -49,13 +53,6 @@ services:
     volumes:
       - ./authelia:/config:ro
       - /usr/local/share/authelia/auth/users.yml:/auth/users.yml:rw
-    expose: [ 80 ]
-    labels:
-      traefik.enable: 'true'
-      traefik.http.routers.authelia.rule: >
-        Host(`auth.6k2.ru`) ||
-        Host(`xn--c1akhkc.xn--62-2lc.xn--p1ai`) ||
-        Host(`xn--c1akhkc.xn--b1ayja.xn--p1ai`)
     secrets:
       - db_password_authelia
       - redis_password
@@ -63,9 +60,21 @@ services:
       - authelia_storage_encryption_key
       - authelia_session_secret
       - authelia_reset_password_secret
+    expose: [ 80 ]
+    labels:
+      traefik.enable: 'true'
+      traefik.http.routers.authelia.rule: >
+        Host(`auth.6k2.ru`) ||
+        Host(`xn--c1akhkc.xn--62-2lc.xn--p1ai`) ||
+        Host(`xn--c1akhkc.xn--b1ayja.xn--p1ai`)
     depends_on:
       - database
       - redis
+      - lldap
+    deploy:
+      resources:
+        limits:
+          memory: 128mb
 
 
   database:
@@ -81,6 +90,7 @@ services:
     secrets:
       - db_password_postgres
       - db_password_authelia
+      - db_password_lldap
     healthcheck:
       test: pg_isready -U postgres
       interval: 10s
@@ -100,7 +110,7 @@ services:
     restart: unless-stopped
     env_file: .env
     environment:
-      - REDIS_PASSWORD_FILE=/run/secrets/redis_password
+      REDIS_PASSWORD_FILE: /run/secrets/redis_password
     volumes:
       - ./redis/overrides.conf:/opt/bitnami/redis/mounted-etc/overrides.conf:ro
       - redis_data:/bitnami/redis/data
@@ -134,6 +144,10 @@ services:
     volumes:
       - /root/.docker/config.json:/config.json:ro
       - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      resources:
+        limits:
+          memory: 128mb
 
 
   portainer:
@@ -144,13 +158,17 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
+    expose: [ 9000 ]   # Web front-end 
     labels:
       traefik.enable: 'true'
-      traefik.http.services.portainer.loadbalancer.server.port: 9000
       traefik.http.routers.portainer.service: portainer
       traefik.http.routers.portainer.middlewares: ip-whitelist@file
       traefik.http.routers.portainer.rule: >
         Host(`portainer.6k2.ru`)
+    deploy:
+      resources:
+        limits:
+          memory: 128mb
 
 
   glances:
@@ -170,13 +188,17 @@ services:
       - ./glances:/etc/glances:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/os-release:/etc/os-release:ro
+    expose: [ 61208 ]   # Web front-end 
     labels:
       traefik.enable: 'true'
-      traefik.http.services.glances.loadbalancer.server.port: 61208
       traefik.http.routers.glances.service: glances
       traefik.http.routers.glances.middlewares: auth@file
       traefik.http.routers.glances.rule: >
         Host(`glances.6k2.ru`)
+    deploy:
+      resources:
+        limits:
+          memory: 256mb
 
 
   oss-2021:
@@ -217,6 +239,7 @@ services:
         limits:
           memory: 128mb
 
+
   osch-2024:
     container_name: osch-2024
     image: moujikov/6k2_osch-2024
@@ -231,6 +254,7 @@ services:
       resources:
         limits:
           memory: 128mb
+
 
   osch-2025:
     container_name: osch-2025
@@ -248,6 +272,7 @@ services:
       resources:
         limits:
           memory: 128mb
+
 
   utility-bills:
     container_name: utility-bills
@@ -277,30 +302,38 @@ services:
         limits:
           memory: 128mb
 
-          
+
 volumes:
   certificates:
   database:
-  redis_data:
+  lldap_data:
   portainer_data:
+  redis_data:
   utility-bills_data:
 
 
 secrets:
   timeweb_auth_token:
-    file: /usr/local/share/timeweb/auth/token
+    file: /usr/local/share/services/timeweb/auth/token
   db_password_postgres:
-    file: /usr/local/share/database/auth/postgres_password
+    file: /usr/local/share/services/database/auth/postgres_password
   db_password_authelia:
-    file: /usr/local/share/database/auth/authelia_password
+    file: /usr/local/share/services/database/auth/authelia_password
+  db_password_lldap:
+    file: /usr/local/share/services/database/auth/lldap_password
   redis_password:
-    file: /usr/local/share/redis/auth/redis_password
+    file: /usr/local/share/services/redis/auth/redis_password
   smtp_password_authelia:
-    file: /usr/local/share/smtp/auth/authelia_password
+    file: /usr/local/share/services/smtp/auth/authelia_password
   authelia_storage_encryption_key:
-    file: /usr/local/share/authelia/keys/authelia_storage_encryption_key
+    file: /usr/local/share/services/authelia/keys/storage_encryption_key
   authelia_session_secret:
-    file: /usr/local/share/authelia/keys/authelia_session_secret
+    file: /usr/local/share/services/authelia/keys/session_secret
   authelia_reset_password_secret:
-    file: /usr/local/share/authelia/keys/authelia_reset_password_secret
-
+    file: /usr/local/share/services/authelia/keys/reset_password_secret
+  lldap_key_seed:
+    file: /usr/local/share/services/lldap/keys/key_seed
+  lldap_jwt_secret:
+    file: /usr/local/share/services/lldap/keys/jwt_secret
+  lldap_ldap_user_pass:
+    file: /usr/local/share/services/lldap/auth/ldap_user_pass
