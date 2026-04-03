@@ -70,7 +70,7 @@ services:
     depends_on:
       - database
       - redis
-      - lldap
+      # - lldap
     deploy:
       resources:
         limits:
