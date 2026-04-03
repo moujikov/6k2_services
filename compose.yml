@@ -52,7 +52,7 @@ services:
       AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET_FILE: /run/secrets/authelia_reset_password_secret
     volumes:
       - ./authelia:/config:ro
-      - /usr/local/share/authelia/auth/users.yml:/auth/users.yml:rw
+      - /usr/local/share/services/authelia/auth/users.yml:/auth/users.yml:rw
     secrets:
       - db_password_authelia
       - redis_password
