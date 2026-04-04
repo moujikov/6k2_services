@@ -46,6 +46,7 @@ services:
     environment:
       AUTHELIA_STORAGE_POSTGRES_PASSWORD_FILE: /run/secrets/db_password_authelia
       AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /run/secrets/authelia_storage_encryption_key
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE: /run/secrets/lldap_password_authelia
       AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE: /run/secrets/smtp_password_authelia
       AUTHELIA_SESSION_SECRET_FILE: /run/secrets/authelia_session_secret
       AUTHELIA_SESSION_REDIS_PASSWORD_FILE: /run/secrets/redis_password
@@ -56,6 +57,7 @@ services:
     secrets:
       - db_password_authelia
       - redis_password
+      - lldap_password_authelia
       - smtp_password_authelia
       - authelia_storage_encryption_key
       - authelia_session_secret
@@ -88,14 +90,14 @@ services:
       RUST_LOG: warn
       LLDAP_KEY_SEED_FILE: /run/secrets/lldap_key_seed
       LLDAP_JWT_SECRET_FILE: /run/secrets/lldap_jwt_secret
-      LLDAP_LDAP_USER_PASS_FILE: /run/secrets/lldap_admin_password
+      LLDAP_LDAP_USER_PASS_FILE: /run/secrets/lldap_password_admin
       LLDAP_LDAP_BASE_DN: dc=6k2,dc=ru
     volumes:
       - ./lldap/lldap_config.toml:/data/lldap_config.toml:ro
     secrets:
       - lldap_key_seed
       - lldap_jwt_secret
-      - lldap_admin_password
+      - lldap_password_admin
     expose: [ 17170 ]   # Web front-end 
     labels:
       traefik.enable: 'true'
@@ -367,5 +369,7 @@ secrets:
     file: /usr/local/share/services/lldap/keys/key_seed
   lldap_jwt_secret:
     file: /usr/local/share/services/lldap/keys/jwt_secret
-  lldap_admin_password:
+  lldap_password_admin:
     file: /usr/local/share/services/lldap/auth/admin_password
+  lldap_password_authelia:
+    file: /usr/local/share/services/lldap/auth/authelia_password

@@ -2,8 +2,14 @@
 
 set -eu -o pipefail
 
+if [ "$TERM" != 'dumb' ] && [ "$TERM" != 'unknown' ]; then
+  black=$(tput setaf 0); red=$(tput setaf 1); green=$(tput setaf 2); yellow=$(tput setaf 3); blue=$(tput setaf 4); magenta=$(tput setaf 5); cyan=$(tput setaf 6); white=$(tput setaf 7)
+  bold=$(tput bold); ul=$(tput smul); reset=$(tput sgr 0)
+  nl=$'\n'
+fi
+
 if [ $EUID -ne 0 ]; then
-   echo "This script is not running as root. Please use sudo."
+   echo "${bold}This script is not running as root. Please use sudo.${reset}"
    exit 1
 fi
 
@@ -14,11 +20,13 @@ ARCH=$(dpkg --print-architecture)
 OS_RELEASE=$(. /etc/os-release && echo $VERSION_CODENAME)
 
 
-#######################  INSTALLING PACKAGES  #######################
+#######################  INSTALLING SYSTEM PACKAGES  #######################
+
+echo "${nl}${nl}${bold}Installing system packages:${reset}"
 
 apt-get update
 apt-get install -y --no-install-recommends \
-  ca-certificates curl gnupg apache2-utils
+  ca-certificates curl gnupg apache2-utils tree
 
 install -m 0755 -d '/etc/apt/keyrings'
 
@@ -42,7 +50,9 @@ apt-get install -y --no-install-recommends \
   docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 
-#######################  SETTING UP ENVIRONMENT  #######################
+#######################  SETTING UP SECRETS  #######################
+
+echo "${nl}${nl}${bold}Setting up secrets:${reset}"
 
 DEFAULT_OWNERSHIP=1000:1000     # Owned and accessed by container mock user
 DEFAULT_PERMISSIONS=0440        # Readable by owner and group
@@ -103,7 +113,6 @@ install -m 0700 -d "$redis_files/auth"
 
 authelia_files="$services_files/authelia"
 install -m 0755 -d "$authelia_files"
-install -m 0700 -d "$authelia_files/auth"
 install -m 0700 -d "$authelia_files/keys"
 
 lldap_files="$services_files/lldap"
@@ -149,8 +158,6 @@ set_secret "$database_files/auth/lldap_url.env" "LLDAP_DATABASE_URL='$lldap_data
 
 generate_secret "$redis_files/auth/redis_password" 64 1001:1000       # Read by redis and authelia
 
-ensure_secret_file "$authelia_files/auth/users.yml" '' 0640           # Read and writen by authelia
-
 
 authelia_storage_encryption_key="$authelia_files/keys/storage_encryption_key"
 if [ -f "$authelia_storage_encryption_key" ]; then
@@ -174,9 +181,15 @@ generate_secret "$authelia_files/keys/reset_password_secret" 64
 generate_secret "$lldap_files/keys/key_seed" 64
 generate_secret "$lldap_files/keys/jwt_secret" 64
 generate_secret "$lldap_files/auth/admin_password" 16
+generate_secret "$lldap_files/auth/authelia_password" 16
+
+echo "${nl}${bold}All secrets have been set up. Current file structure:${reset}"
+tree $services_files
 
 
 #######################  STARTING SERVICES  #######################
+
+echo "${nl}${nl}${bold}Starting up services:${reset}"
 
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 docker compose --file "$DIR/compose.yml" up --detach
