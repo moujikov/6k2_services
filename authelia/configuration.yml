@@ -21,11 +21,11 @@ storage:
 access_control:
   rules:
 
-    - policy: one_factor                      # Require authentication
+    - policy: one_factor                      # Admit authenticated users
       resources:
-        - ^/-$                                # only in private area
+        - ^/-$                                # in private area
         - ^/-/
-      domain:                                 # in domains:
+      domain:                                 # of meetings:
         - 'oss.6k2.ru'                        #   oss.6k2.ru
         - '*.oss.6k2.ru'                      #   *.oss.6k2.ru
         - 'os4.6k2.ru'                        #   os4.6k2.ru
@@ -37,8 +37,8 @@ access_control:
         - 'xn--n1ags.xn--62-2lc.xn--p1ai'     #   осч.6к2.рф
         - '*.xn--n1ags.xn--62-2lc.xn--p1ai'   #   *.осч.6к2.рф
         
-    - policy: bypass                          # Allow public access everywhere else
-      domain:                                 # in domains:
+    - policy: bypass                          # Allow public access
+      domain:                                 # to meetings:
         - 'oss.6k2.ru'                        #   oss.6k2.ru
         - '*.oss.6k2.ru'                      #   *.oss.6k2.ru
         - 'os4.6k2.ru'                        #   os4.6k2.ru
@@ -50,10 +50,15 @@ access_control:
         - 'xn--n1ags.xn--62-2lc.xn--p1ai'     #   осч.6к2.рф
         - '*.xn--n1ags.xn--62-2lc.xn--p1ai'   #   *.осч.6к2.рф
 
-    - policy: one_factor                      # Require authentication by default
-      domain:                                 # in all direct subdomains:
-        - '*.6k2.ru'                          #   *.6k2.ru
-        - '*.xn--62-2lc.xn--p1ai'             #   *.6к2.рф
+    - policy: one_factor                      # Admit authenticated users
+      domain:
+        - 'glances.6k2.ru'                    # to glances.6k2.ru
+        
+    - policy: one_factor                      # Admit authenticated users
+      subject:
+        - 'group:admins'                      # from group 'admins'
+      domain:                                 
+        - 'traefik.6k2.ru'                    # to traefik.6k2.ru
   
   default_policy: deny                        # Deny access if no explicit match
 
