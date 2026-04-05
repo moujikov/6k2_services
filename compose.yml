@@ -28,11 +28,12 @@ services:
         PathRegexp(`/favicon\.(ico|png|svg)$`) )
 
       traefik.http.routers.traefik.service: api@internal
-      traefik.http.routers.traefik.middlewares: ip-whitelist@file, auth@file
+      traefik.http.routers.traefik.middlewares: ip-whitelist@file, authentik@file
       traefik.http.routers.traefik.rule: >
         Host(`traefik.6k2.ru`)
     depends_on:
       - authelia
+      # - authentik
     deploy:
       resources:
         limits:
@@ -78,6 +79,40 @@ services:
       resources:
         limits:
           memory: 128mb
+
+
+  authentic:
+    container_name: authentic
+    image: ghcr.io/goauthentik/server:2026.2
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      AUTHENTIK_POSTGRESQL__HOST: database
+      AUTHENTIK_POSTGRESQL__NAME: authentik
+      AUTHENTIK_POSTGRESQL__USER: authentik
+      AUTHENTIK_POSTGRESQL__PASSWORD: file:///run/secrets/db_password_authentic
+      AUTHENTIK_SECRET_KEY: file:///run/secrets/authentic_session_secret
+      AUTHENTIK_DISABLE_STARTUP_ANALYTICS: true
+      AUTHENTIK_DISABLE_UPDATE_CHECK: true
+      AUTHENTIK_ERROR_REPORTING__ENABLED: false
+    volumes:
+      - authentic_data:/data
+    secrets:
+      - db_password_authentic
+      - redis_password
+      - authentic_session_secret
+    expose: [ 9000 ]
+    labels:
+      traefik.enable: 'true'
+      traefik.http.routers.authentic.middlewares: ip-whitelist@file
+      traefik.http.routers.authentic.rule: >
+        Host(`authentic.6k2.ru`)
+    depends_on:
+      - database
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 256mb
 
 
   lldap:
@@ -343,6 +378,7 @@ services:
 volumes:
   certificates:
   database:
+  authentic_data:
   portainer_data:
   redis_data:
   utility-bills_data:
@@ -369,6 +405,8 @@ secrets:
     file: /usr/local/share/services/authelia/keys/session_secret
   authelia_reset_password_secret:
     file: /usr/local/share/services/authelia/keys/reset_password_secret
+  authentic_session_secret:
+    file: /usr/local/share/services/authentic/keys/session_secret
   lldap_key_seed:
     file: /usr/local/share/services/lldap/keys/key_seed
   lldap_jwt_secret:
