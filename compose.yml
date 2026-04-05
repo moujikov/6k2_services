@@ -84,6 +84,7 @@ services:
   authentik:
     container_name: authentik
     image: ghcr.io/goauthentik/server:2026.2
+    command: server
     restart: unless-stopped
     env_file: .env
     environment:
