@@ -115,9 +115,9 @@ authelia_files="$services_files/authelia"
 install -m 0755 -d "$authelia_files"
 install -m 0700 -d "$authelia_files/keys"
 
-authentic_files="$services_files/authentic"
-install -m 0755 -d "$authentic_files"
-install -m 0700 -d "$authentic_files/keys"
+authentik_files="$services_files/authentik"
+install -m 0755 -d "$authentik_files"
+install -m 0700 -d "$authentik_files/keys"
 
 lldap_files="$services_files/lldap"
 install -m 0755 -d "$lldap_files"
@@ -155,7 +155,7 @@ fi
 
 generate_secret "$database_files/auth/postgres_password" 32 70:70     # Read only by postgres
 generate_secret "$database_files/auth/authelia_password" 32 70:1000   # Read by postgres and authelia
-generate_secret "$database_files/auth/authentic_password" 32 70:1000   # Read by postgres and authentic
+generate_secret "$database_files/auth/authentik_password" 32 70:1000   # Read by postgres and authentik
 generate_secret "$database_files/auth/lldap_password" 32 70:1000      # Read by postgres and lldap
 
 lldap_database_url="postgres://lldap:$(cat $database_files/auth/lldap_password)@database/lldap"
@@ -183,7 +183,7 @@ fi
 generate_secret "$authelia_files/keys/session_secret" 64
 generate_secret "$authelia_files/keys/reset_password_secret" 64
 
-generate_secret "$authentic_files/keys/session_secret" 64
+generate_secret "$authentik_files/keys/session_secret" 64
 
 generate_secret "$lldap_files/keys/key_seed" 64
 generate_secret "$lldap_files/keys/jwt_secret" 64
