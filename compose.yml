@@ -124,6 +124,7 @@ services:
     secrets:
       - db_password_postgres
       - db_password_authelia
+      - db_password_authentic
       - db_password_lldap
     healthcheck:
       test: pg_isready -U postgres
