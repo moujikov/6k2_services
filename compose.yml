@@ -355,6 +355,8 @@ secrets:
     file: /usr/local/share/services/database/auth/postgres_password
   db_password_authelia:
     file: /usr/local/share/services/database/auth/authelia_password
+  db_password_authentic:
+    file: /usr/local/share/services/database/auth/authentic_password
   db_password_lldap:
     file: /usr/local/share/services/database/auth/lldap_password
   redis_password:
