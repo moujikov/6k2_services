@@ -119,7 +119,7 @@ services:
 
 
   authentik-worker:
-    container_name: authentik
+    container_name: authentik-worker
     image: ghcr.io/goauthentik/server:2026.2
     command: worker
     restart: unless-stopped
