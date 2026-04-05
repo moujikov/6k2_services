@@ -93,6 +93,8 @@ services:
       AUTHENTIK_POSTGRESQL__USER: authentik
       AUTHENTIK_POSTGRESQL__PASSWORD: file:///run/secrets/db_password_authentik
       AUTHENTIK_SECRET_KEY: file:///run/secrets/authentik_session_secret
+      AUTHENTIK_BOOTSTRAP_EMAIL: admin@6k2.ru
+      AUTHENTIK_BOOTSTRAP_PASSWORD: file:///run/secrets/authentik_admin_password
       AUTHENTIK_DISABLE_STARTUP_ANALYTICS: true
       AUTHENTIK_DISABLE_UPDATE_CHECK: true
       AUTHENTIK_ERROR_REPORTING__ENABLED: false
@@ -102,6 +104,7 @@ services:
       - db_password_authentik
       - redis_password
       - authentik_session_secret
+      - authentik_admin_password
     expose: [ 9000 ]
     labels:
       traefik.enable: 'true'
@@ -221,26 +224,6 @@ services:
           memory: 128mb
 
 
-  portainer:
-    container_name: portainer
-    image: portainer/portainer-ce:latest
-    restart: unless-stopped
-    env_file: .env
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - portainer_data:/data
-    expose: [ 9000 ]   # Web front-end 
-    labels:
-      traefik.enable: 'true'
-      traefik.http.routers.portainer.middlewares: ip-whitelist@file
-      traefik.http.routers.portainer.rule: >
-        Host(`portainer.6k2.ru`)
-    deploy:
-      resources:
-        limits:
-          memory: 128mb
-
-
   glances:
     container_name: glances
     image: nicolargo/glances:latest
@@ -253,6 +236,7 @@ services:
       - /:/rootfs:ro
       - database:/database:ro
       - redis_data:/redis_data:ro
+      - authentik_data:/authentik_data:ro
       - portainer_data:/portainer_data:ro
       - utility-bills_data:/utility-bills_data:ro
       - ./glances:/etc/glances:ro
@@ -380,7 +364,6 @@ volumes:
   certificates:
   database:
   authentik_data:
-  portainer_data:
   redis_data:
   utility-bills_data:
 
@@ -408,6 +391,8 @@ secrets:
     file: /usr/local/share/services/authelia/keys/reset_password_secret
   authentik_session_secret:
     file: /usr/local/share/services/authentik/keys/session_secret
+  authentik_admin_password:
+    file: /usr/local/share/services/authentik/auth/admin_password
   lldap_key_seed:
     file: /usr/local/share/services/lldap/keys/key_seed
   lldap_jwt_secret:

@@ -117,6 +117,7 @@ install -m 0700 -d "$authelia_files/keys"
 
 authentik_files="$services_files/authentik"
 install -m 0755 -d "$authentik_files"
+install -m 0700 -d "$authentik_files/auth"
 install -m 0700 -d "$authentik_files/keys"
 
 lldap_files="$services_files/lldap"
@@ -184,6 +185,7 @@ generate_secret "$authelia_files/keys/session_secret" 64
 generate_secret "$authelia_files/keys/reset_password_secret" 64
 
 generate_secret "$authentik_files/keys/session_secret" 64
+generate_secret "$authentik_files/auth/admin_password" 16
 
 generate_secret "$lldap_files/keys/key_seed" 64
 generate_secret "$lldap_files/keys/jwt_secret" 64
