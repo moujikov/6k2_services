@@ -31,6 +31,8 @@ services:
       traefik.http.routers.traefik.middlewares: ip-whitelist@file, auth@file
       traefik.http.routers.traefik.rule: >
         Host(`traefik.6k2.ru`)
+    depends_on:
+      - authelia
     deploy:
       resources:
         limits:
