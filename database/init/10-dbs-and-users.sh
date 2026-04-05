@@ -14,4 +14,5 @@ create_db_and_user() {
 }
 
 create_db_and_user authelia authelia
+create_db_and_user authentic authentic
 create_db_and_user lldap lldap
