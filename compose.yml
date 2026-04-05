@@ -133,7 +133,7 @@ services:
       LLDAP_LDAP_USER_PASS_FILE: /run/secrets/lldap_password_admin
       LLDAP_LDAP_BASE_DN: dc=6k2,dc=ru
     volumes:
-      - ./lldap/lldap_config.toml:/data/lldap_config.toml:ro
+      - ./lldap:/data:ro
     secrets:
       - lldap_key_seed
       - lldap_jwt_secret
