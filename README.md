@@ -22,7 +22,15 @@
    ```
    Provide Docker Hub access token and other secrets when prompted.
 
-6. Login to LLDAP at https://users.6k2.ru with user `admin` and password from `/usr/local/share/services/lldap/auth/ldap_user_pass`.
-Add user `authelia` with password from `/usr/local/share/services/lldap/auth/authelia_password`, add it to group `lldap_password_manager` to allow Authelia to authenticate in LLDAP and change passwords.
+6. *If using Authelia + LLDAP:*
+   Login to LLDAP at https://users.6k2.ru with user `admin` and password from `/usr/local/share/services/lldap/auth/ldap_user_pass`.
+   Add user `authelia` with password from `/usr/local/share/services/lldap/auth/authelia_password`, add it to group `lldap_password_manager` to allow Authelia to authenticate in LLDAP and change passwords.
 
-Login to https://authentik.6k2.ru/ with user admin@6k2.ru and password from `/usr/local/share/services/authentik/auth/admin_password`. Configure Authentik as needed.
+7. *If using Authentik:*
+   Login to https://authentik.6k2.ru/ with user admin@6k2.ru and password from `/usr/local/share/services/authentik/auth/admin_password`. Configure Authentik as needed.
+
+   N.B.: If password is not accepted try to change it with:
+   ```
+   docker compose exec authentik ak changepassword akadmin
+   ```
+   Provide password from `/usr/local/share/services/authentik/auth/admin_password` when prompted.
