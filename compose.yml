@@ -376,7 +376,6 @@ volumes:
   certificates:
   database:
   authentik_data:
-    external: true    # See: https://github.com/goauthentik/authentik/issues/20270
   redis_data:
   utility-bills_data:
 
