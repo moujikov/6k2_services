@@ -100,6 +100,7 @@ services:
       traefik.enable: 'true'
       traefik.http.routers.authentik.middlewares: ip-whitelist@file
       traefik.http.routers.authentik.rule: >
+        Host(`authentik.6k2.ru`) ||
         Host(`auth.6k2.ru`)
     depends_on:
       - database
