@@ -24,3 +24,5 @@
 
 6. Login to LLDAP at https://users.6k2.ru with user `admin` and password from `/usr/local/share/services/lldap/auth/ldap_user_pass`.
 Add user `authelia` with password from `/usr/local/share/services/lldap/auth/authelia_password`, add it to group `lldap_password_manager` to allow Authelia to authenticate in LLDAP and change passwords.
+
+Login to https://authentik.6k2.ru/ with user admin@6k2.ru and password from `/usr/local/share/services/authentik/auth/admin_password`. Configure Authentik as needed.

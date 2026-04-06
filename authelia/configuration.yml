@@ -1,5 +1,4 @@
 server:
-  address: tcp://:80/
   asset_path: /config/assets
 
 

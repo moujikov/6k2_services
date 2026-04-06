@@ -8,7 +8,7 @@ http:
 
     authelia:
       forwardAuth:
-        address: http://authelia/api/authz/forward-auth
+        address: http://authelia:9091/api/authz/forward-auth
         maxResponseBodySize: 4096
         authResponseHeaders: 
           - Remote-User
