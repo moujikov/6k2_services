@@ -90,11 +90,7 @@ services:
       - .env
       - authentik/.env
     volumes:
-      - type: volume
-        source: authentik_data
-        target: /data
-        volume:
-          nocopy: true    # See: https://github.com/goauthentik/authentik/issues/20270
+      - authentik_data:/data
     secrets:
       - db_password_authentik
       - authentik_session_secret
@@ -123,11 +119,7 @@ services:
       - .env
       - authentik/.env
     volumes:
-      - type: volume
-        source: authentik_data
-        target: /data
-        volume:
-          nocopy: true    # See: https://github.com/goauthentik/authentik/issues/20270
+      - authentik_data:/data
     secrets:
       - db_password_authentik
       - authentik_session_secret
@@ -384,6 +376,7 @@ volumes:
   certificates:
   database:
   authentik_data:
+    external: true    # See: https://github.com/goauthentik/authentik/issues/20270
   redis_data:
   utility-bills_data:
 

@@ -196,6 +196,14 @@ echo "${nl}${bold}All secrets have been set up. Current file structure:${reset}"
 tree $services_files
 
 
+
+# Temporary workaround for https://github.com/goauthentik/authentik/issues/20270
+docker volume create 6k2-services_authentik_data
+mountpoint=$(docker volume inspect 6k2-services_authentik_data --format '{{ .Mountpoint }}')
+install -m 0755 -o 1000 -g 1000 -d "$mountpoint/media"
+
+
+
 #######################  STARTING SERVICES  #######################
 
 echo "${nl}${nl}${bold}Starting up services:${reset}"
