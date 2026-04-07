@@ -89,6 +89,8 @@ services:
     env_file: 
       - .env
       - authentik/.env
+    environment:
+      AUTHENTIK_LOG_LEVEL: ${LOG_LEVEL:-warning}
     volumes:
       - authentik_data:/data
     secrets:
@@ -118,6 +120,8 @@ services:
     env_file: 
       - .env
       - authentik/.env
+    environment:
+      AUTHENTIK_LOG_LEVEL: ${LOG_LEVEL:-warning}
     volumes:
       - authentik_data:/data
     secrets:
