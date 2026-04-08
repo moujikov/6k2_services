@@ -7,7 +7,7 @@ web:
   http: 0.0.0.0:5556
 
 logger:
-  level: {{ getenv DEX_LOG_LEVEL warning }}
+  level: {{ getenv "DEX_LOG_LEVEL" "warning" }}
   format: text
 
 oauth2:
@@ -18,7 +18,7 @@ oauth2:
 
 staticClients:
   - id: yandex
-    secret: '{{ file.Read /run/secrets/oauth_yandex_client_secret }}'
+    secret: '{{ file.Read "/run/secrets/oauth_yandex_client_secret" }}'
     redirectURIs: [ https://auth.6k2.ru/source/oauth/callback/dex-yandex/ ]
     allowedConnectors: [ yandex ]
 
@@ -27,7 +27,7 @@ connectors:
   id: yandex
   config:
     clientID: c99791b58ab54084a4afad66e306b15c
-    clientSecret: '{{ file.Read /run/secrets/oauth_yandex_client_secret }}'
+    clientSecret: '{{ file.Read "/run/secrets/oauth_yandex_client_secret" }}'
     redirectURI: https://dex.6k2.ru/callback
 
     authorizationURL: https://oauth.yandex.ru/authorize
