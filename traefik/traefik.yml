@@ -2,6 +2,8 @@ api:
   dashboard: true
   disableDashboardAd: true
 
+log: true
+
 entryPoints:
   web:
     address: ':80'
