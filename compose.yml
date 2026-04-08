@@ -31,9 +31,6 @@ services:
       traefik.http.routers.traefik.middlewares: ip-whitelist@file, authentik@file
       traefik.http.routers.traefik.rule: >
         Host(`traefik.6k2.ru`)
-    # depends_on:
-    #   - authelia
-    #   - authentik
     deploy:
       resources:
         limits:
@@ -150,8 +147,8 @@ services:
     expose: [ 5556 ]    # OpenID Connect service endpoint
     labels:
       traefik.enable: 'true'
-      traefik.http.routers.authentik.middlewares: ip-whitelist@file
-      traefik.http.routers.authentik.rule: >
+      traefik.http.routers.dex.middlewares: ip-whitelist@file
+      traefik.http.routers.dex.rule: >
         Host(`dex.6k2.ru`)
     deploy:
       resources:
