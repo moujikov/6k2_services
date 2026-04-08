@@ -145,6 +145,8 @@ services:
       DEX_LOG_LEVEL: ${LOG_LEVEL:-warning}
     volumes:
       - ./dex:/etc/dex:ro
+    secrets:
+      - oauth_yandex_client_secret
     expose: [ 5556 ]    # OpenID Connect service endpoint
     labels:
       traefik.enable: 'true'
