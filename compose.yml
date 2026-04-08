@@ -136,6 +136,27 @@ services:
           memory: 2gb
 
 
+  dex:
+    container_name: dex
+    image: dexidp/dex:v2.45.1
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DEX_LOG_LEVEL: ${LOG_LEVEL:-warning}
+    volumes:
+      - ./dex:/etc/dex:ro
+    expose: [ 5556 ]    # OpenID Connect service endpoint
+    labels:
+      traefik.enable: 'true'
+      traefik.http.routers.authentik.middlewares: ip-whitelist@file
+      traefik.http.routers.authentik.rule: >
+        Host(`dex.6k2.ru`)
+    deploy:
+      resources:
+        limits:
+          memory: 128mb
+
+
   lldap:
     container_name: lldap
     image: lldap/lldap:stable-alpine-rootless

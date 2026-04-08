@@ -1,0 +1,40 @@
+issuer: https://dex.6k2.ru
+
+storage:
+  type: memory
+
+web:
+  http: 0.0.0.0:5556
+
+logger:
+  level: {{ getenv DEX_LOG_LEVEL warning }}
+  format: text
+
+oauth2:
+  grantTypes: [ "authorization_code" ]
+  responseTypes: [ "code" ]
+  skipApprovalScreen: true
+  alwaysShowLoginScreen: false
+
+staticClients:
+  - id: yandex
+    secret: '{{ file.Read /run/secrets/oauth_yandex_client_secret }}'
+    redirectURIs: [ https://auth.6k2.ru/source/oauth/callback/dex-yandex/ ]
+    allowedConnectors: [ yandex ]
+
+connectors:
+- type: oauth
+  id: yandex
+  config:
+    clientID: c99791b58ab54084a4afad66e306b15c
+    clientSecret: '{{ file.Read /run/secrets/oauth_yandex_client_secret }}'
+    redirectURI: https://dex.6k2.ru/callback
+
+    authorizationURL: https://oauth.yandex.ru/authorize
+    tokenURL: https://oauth.yandex.ru/token
+    userInfoURL: https://login.yandex.ru/info
+
+    claimMapping:
+      preferredUsernameKey: login
+      emailKey: default_email
+      userNameKey: real_name
