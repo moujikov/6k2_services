@@ -142,7 +142,7 @@ services:
     restart: unless-stopped
     env_file: .env
     environment:
-      DEX_LOG_LEVEL: ${LOG_LEVEL:-warning}
+      DEX_LOG_LEVEL: ${LOG_LEVEL:-warn}
     volumes:
       - ./dex:/etc/dex:ro
     secrets:

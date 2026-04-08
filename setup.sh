@@ -151,7 +151,7 @@ fi
 read -s -p "Provide Yandex OAuth Client secret (empty to skip): " OAUTH_SECRET_YANDEX
 echo
 if [ -n "$OAUTH_SECRET_YANDEX" ]; then
-  set_secret "$oauth_files/secrets/yandex" "$OAUTH_SECRET_YANDEX"
+  set_secret "$oauth_files/secrets/yandex" "$OAUTH_SECRET_YANDEX" 1001:1001
 fi
 
 read -s -p "Provide SMTP password for Authelia (empty to skip): " SMTP_PASSWORD_AUTHELIA
