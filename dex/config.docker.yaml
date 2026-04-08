@@ -7,7 +7,7 @@ web:
   http: 0.0.0.0:5556
 
 logger:
-  level: {{ getenv "DEX_LOG_LEVEL" "warning" }}
+  level: {{ getenv "DEX_LOG_LEVEL" "warn" }}
   format: text
 
 oauth2:
