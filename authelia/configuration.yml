@@ -12,7 +12,7 @@ authentication_backend:
 
 storage:
   postgres:
-    address: tcp://database:5432
+    address: tcp://postgres:5432
     database: authelia
     username: authelia
 
