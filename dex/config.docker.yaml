@@ -24,7 +24,8 @@ staticClients:
     allowedConnectors: [ yandex ]
 
 connectors:
-- type: oauth
+- name: Yandex OAuth
+  type: oauth
   id: yandex
   config:
     clientID: c99791b58ab54084a4afad66e306b15c
