@@ -3,7 +3,7 @@ api:
   disableDashboardAd: true
 
 log:
-  level: warn
+  level: debug
 
 entryPoints:
   web:
