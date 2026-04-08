@@ -72,7 +72,7 @@ services:
         Host(`xn--c1akhkc.xn--62-2lc.xn--p1ai`) ||
         Host(`xn--c1akhkc.xn--b1ayja.xn--p1ai`)
     depends_on:
-      - database
+      - postgres
       - redis
       - lldap
     deploy:
@@ -105,7 +105,7 @@ services:
         Host(`authentik.6k2.ru`) ||
         Host(`auth.6k2.ru`)
     depends_on:
-      - database
+      - postgres
     deploy:
       resources:
         limits:
@@ -129,7 +129,7 @@ services:
       - authentik_session_secret
       - authentik_admin_password
     depends_on:
-      - database
+      - postgres
     deploy:
       resources:
         limits:
@@ -142,7 +142,7 @@ services:
     restart: unless-stopped
     env_file:
       - .env
-      - /usr/local/share/services/database/auth/lldap_url.env
+      - /usr/local/share/services/postgres/auth/lldap_url.env
     environment:
       RUST_LOG: warn
       LLDAP_KEY_SEED_FILE: /run/secrets/lldap_key_seed
@@ -167,16 +167,16 @@ services:
           memory: 128mb
 
 
-  database:
-    container_name: database
+  postgres:
+    container_name: postgres
     image: postgres:18-alpine
     restart: unless-stopped
     env_file: .env
     environment:
       POSTGRES_PASSWORD_FILE: /run/secrets/db_password_postgres
     volumes:
-      - ./database/init:/docker-entrypoint-initdb.d
-      - database:/var/lib/postgresql
+      - ./postgres/init:/docker-entrypoint-initdb.d
+      - postgres_database:/var/lib/postgresql
     secrets:
       - db_password_postgres
       - db_password_authelia
@@ -251,7 +251,7 @@ services:
     pid: host
     volumes:
       - /:/rootfs:ro
-      - database:/database:ro
+      - postgres_database:/postgres_database:ro
       - redis_data:/redis_data:ro
       - authentik_data:/authentik_data:ro
       - utility-bills_data:/utility-bills_data:ro
@@ -378,7 +378,7 @@ services:
 
 volumes:
   certificates:
-  database:
+  postgres_database:
   authentik_data:
   redis_data:
   utility-bills_data:
@@ -388,13 +388,13 @@ secrets:
   timeweb_auth_token:
     file: /usr/local/share/services/timeweb/auth/token
   db_password_postgres:
-    file: /usr/local/share/services/database/auth/postgres_password
+    file: /usr/local/share/services/postgres/auth/postgres_password
   db_password_authelia:
-    file: /usr/local/share/services/database/auth/authelia_password
+    file: /usr/local/share/services/postgres/auth/authelia_password
   db_password_authentik:
-    file: /usr/local/share/services/database/auth/authentik_password
+    file: /usr/local/share/services/postgres/auth/authentik_password
   db_password_lldap:
-    file: /usr/local/share/services/database/auth/lldap_password
+    file: /usr/local/share/services/postgres/auth/lldap_password
   redis_password:
     file: /usr/local/share/services/redis/auth/redis_password
   smtp_password_authelia:

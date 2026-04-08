@@ -103,9 +103,9 @@ generate_secret() {
 services_files='/usr/local/share/services'
 install -m 0755 -d "$services_files"
 
-database_files="$services_files/database"
-install -m 0755 -d "$database_files"
-install -m 0700 -d "$database_files/auth"
+postgres_files="$services_files/postgres"
+install -m 0755 -d "$postgres_files"
+install -m 0700 -d "$postgres_files/auth"
 
 redis_files="$services_files/redis"
 install -m 0755 -d "$redis_files"
@@ -154,13 +154,13 @@ if [ -n "$SMTP_PASSWORD_AUTHELIA" ]; then
 fi
 
 
-generate_secret "$database_files/auth/postgres_password" 32 70:70     # Read only by postgres
-generate_secret "$database_files/auth/authelia_password" 32 70:1000   # Read by postgres and authelia
-generate_secret "$database_files/auth/authentik_password" 32 70:1000   # Read by postgres and authentik
-generate_secret "$database_files/auth/lldap_password" 32 70:1000      # Read by postgres and lldap
+generate_secret "$postgres_files/auth/postgres_password" 32 70:70     # Read only by postgres
+generate_secret "$postgres_files/auth/authelia_password" 32 70:1000   # Read by postgres and authelia
+generate_secret "$postgres_files/auth/authentik_password" 32 70:1000   # Read by postgres and authentik
+generate_secret "$postgres_files/auth/lldap_password" 32 70:1000      # Read by postgres and lldap
 
-lldap_database_url="postgres://lldap:$(cat $database_files/auth/lldap_password)@database/lldap"
-set_secret "$database_files/auth/lldap_url.env" "LLDAP_DATABASE_URL='$lldap_database_url'"
+lldap_database_url="postgres://lldap:$(cat $postgres_files/auth/lldap_password)@postgres/lldap"
+set_secret "$postgres_files/auth/lldap_url.env" "LLDAP_DATABASE_URL='$lldap_database_url'"
 
 generate_secret "$redis_files/auth/redis_password" 64 1001:1000       # Read by redis and authelia
 
