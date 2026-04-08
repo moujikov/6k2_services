@@ -33,8 +33,8 @@ http:
         sourceRange:
           - 172.18.0.1          # Requests from within Docker network (SRC-NATed by Docker)
           - 192.168.0.0/24      # Requests from private network (other VPSes)
-          - 93.191.63.222/32    # Andrey's home IP
-          - 195.208.188.0/24    # Andrey's home IP
+          - 93.191.63.222       # Andrey's home
+          - 195.208.188.0/24    # Andrey's home
 
     redirect-var62:
       redirectRegex:

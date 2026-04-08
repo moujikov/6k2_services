@@ -61,9 +61,6 @@ certificatesResolvers:
       httpChallenge:
         entryPoint: web
 
-log:
-  level: INFO
-
 providers:
   docker:
     exposedByDefault: false
