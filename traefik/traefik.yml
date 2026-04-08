@@ -2,7 +2,8 @@ api:
   dashboard: true
   disableDashboardAd: true
 
-log: true
+log:
+  level: warn
 
 entryPoints:
   web:
