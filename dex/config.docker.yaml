@@ -10,6 +10,11 @@ logger:
   level: {{ getenv "DEX_LOG_LEVEL" "warn" }}
   format: text
 
+signer:
+  type: local
+  config:
+    keysRotationPeriod: 6h
+
 oauth2:
   grantTypes: [ "authorization_code" ]
   responseTypes: [ "code" ]
