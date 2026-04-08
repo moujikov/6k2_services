@@ -407,7 +407,9 @@ volumes:
 
 secrets:
   timeweb_auth_token:
-    file: /usr/local/share/services/timeweb/auth/token
+    file: /usr/local/share/services/oauth/tokens/timeweb
+  oauth_yandex_client_secret:
+    file: /usr/local/share/services/oauth/secrets/yandex
   db_password_postgres:
     file: /usr/local/share/services/postgres/auth/postgres_password
   db_password_authelia:

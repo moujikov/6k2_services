@@ -125,9 +125,10 @@ install -m 0755 -d "$lldap_files"
 install -m 0700 -d "$lldap_files/auth"
 install -m 0700 -d "$lldap_files/keys"
 
-timeweb_files="$services_files/timeweb"
-install -m 0755 -d "$timeweb_files"
-install -m 0700 -d "$timeweb_files/auth"
+oauth_files="$services_files/oauth"
+install -m 0755 -d "$oauth_files"
+install -m 0700 -d "$oauth_files/tokens"
+install -m 0700 -d "$oauth_files/secrets"
 
 smtp_files="$services_files/smtp"
 install -m 0755 -d "$smtp_files"
@@ -144,7 +145,13 @@ fi
 read -s -p "Provide Timeweb Cloud auth token (empty to skip): " TIMEWEB_AUTH_TOKEN
 echo
 if [ -n "$TIMEWEB_AUTH_TOKEN" ]; then
-  set_secret "$timeweb_files/auth/token" "$TIMEWEB_AUTH_TOKEN"
+  set_secret "$oauth_files/tokens/timeweb" "$TIMEWEB_AUTH_TOKEN"
+fi
+
+read -s -p "Provide Yandex OAuth Client secret (empty to skip): " OAUTH_SECRET_YANDEX
+echo
+if [ -n "$OAUTH_SECRET_YANDEX" ]; then
+  set_secret "$oauth_files/secrets/yandex" "$OAUTH_SECRET_YANDEX"
 fi
 
 read -s -p "Provide SMTP password for Authelia (empty to skip): " SMTP_PASSWORD_AUTHELIA
@@ -152,6 +159,7 @@ echo
 if [ -n "$SMTP_PASSWORD_AUTHELIA" ]; then
   set_secret "$smtp_files/auth/authelia_password" "$SMTP_PASSWORD_AUTHELIA"
 fi
+
 
 
 generate_secret "$postgres_files/auth/postgres_password" 32 70:70     # Read only by postgres
