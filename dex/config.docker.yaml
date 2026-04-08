@@ -17,7 +17,8 @@ oauth2:
   alwaysShowLoginScreen: false
 
 staticClients:
-  - id: yandex
+  - name: Yandex OAuth proxy
+    id: yandex
     secret: '{{ file.Read "/run/secrets/oauth_yandex_client_secret" }}'
     redirectURIs: [ https://auth.6k2.ru/source/oauth/callback/dex-yandex/ ]
     allowedConnectors: [ yandex ]
