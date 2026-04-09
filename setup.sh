@@ -76,7 +76,7 @@ set_secret() {
   local group="${ownership#*:}"
 
   install -m "$permissions" -o "$owner" -g "$group" /dev/null "$file"
-  echo "$content" >> "$file"
+  printf "$content" >> "$file"
 }
 
 generate_secret() {
