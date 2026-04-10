@@ -147,9 +147,16 @@ services:
     expose: [ 5556 ]    # OpenID Connect service endpoint
     labels:
       traefik.enable: 'true'
+
+      # Publicly allow redirects to /auth for OIDC authentication flow
+      traefik.http.routers.dex-auth.rule: >
+        Host(`dex.6k2.ru`) && ( Path(`/auth`) || PathPrefix(`/auth/`) )
+
+      # Everything else should only be accessed from within Authentik
       traefik.http.routers.dex.middlewares: ip-whitelist@file
       traefik.http.routers.dex.rule: >
         Host(`dex.6k2.ru`)
+
     deploy:
       resources:
         limits:
