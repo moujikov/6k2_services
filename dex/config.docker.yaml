@@ -43,6 +43,6 @@ connectors:
     userInfoURL: https://login.yandex.ru/info
 
     claimMapping:
-      preferredUsernameKey: login
+      preferredUsernameKey: default_email
       emailKey: default_email
       userNameKey: real_name
