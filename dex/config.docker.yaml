@@ -36,7 +36,7 @@ connectors:
   config:
     clientID: c99791b58ab54084a4afad66e306b15c
     clientSecret: '{{ file.Read "/run/secrets/oauth_yandex_client_secret" }}'
-    redirectURI: https://dex.6k2.ru/callback
+    redirectURI: https://dex.6k2.ru/callback/yandex
 
     authorizationURL: https://oauth.yandex.ru/authorize
     tokenURL: https://oauth.yandex.ru/token
