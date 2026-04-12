@@ -4,7 +4,7 @@ http:
     auth:
       chain:
         middlewares:
-          - authelia
+          - authentik
 
     authelia:
       forwardAuth:

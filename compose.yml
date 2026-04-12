@@ -20,6 +20,7 @@ services:
     labels:
       traefik.enable: 'true'
       
+      traefik.http.routers.traefik-static.priority: 100
       traefik.http.routers.traefik-static.service: api@internal
       traefik.http.routers.traefik-static.rule: >
         Host(`traefik.6k2.ru`) && (
@@ -27,8 +28,9 @@ services:
         PathRegexp(`/manifest\.json$`) || 
         PathRegexp(`/favicon\.(ico|png|svg)$`) )
 
+      traefik.http.routers.traefik.priority: 1
       traefik.http.routers.traefik.service: api@internal
-      traefik.http.routers.traefik.middlewares: ip-whitelist@file, authentik@file
+      traefik.http.routers.traefik.middlewares: ip-whitelist@file, auth@file
       traefik.http.routers.traefik.rule: >
         Host(`traefik.6k2.ru`)
     deploy:
@@ -149,10 +151,12 @@ services:
       traefik.enable: 'true'
 
       # Publicly allow redirects to /auth for OIDC authentication flow
+      traefik.http.routers.dex-auth.priority: 100
       traefik.http.routers.dex-auth.rule: >
         Host(`dex.6k2.ru`) && ( Path(`/auth`) || PathPrefix(`/auth/`) )
 
       # Everything else should only be accessed from within Authentik
+      traefik.http.routers.dex.priority: 1
       traefik.http.routers.dex.middlewares: ip-whitelist@file
       traefik.http.routers.dex.rule: >
         Host(`dex.6k2.ru`)
@@ -288,7 +292,7 @@ services:
     expose: [ 61208 ]    # Web front-end 
     labels:
       traefik.enable: 'true'
-      traefik.http.routers.glances.middlewares: auth@file
+      traefik.http.routers.glances.middlewares: authelia@file
       traefik.http.routers.glances.rule: >
         Host(`glances.6k2.ru`)
     deploy:
@@ -304,7 +308,15 @@ services:
     env_file: .env
     labels:
       traefik.enable: 'true'
-      traefik.http.routers.oss-2021.middlewares: auth@file
+
+      # Private area requires authentication
+      traefik.http.routers.oss-2021-private.priority: 100
+      traefik.http.routers.oss-2021-private.middlewares: auth@file
+      traefik.http.routers.oss-2021-private.rule: >
+        Host(`2021.oss.6k2.ru`) && ( Path(`/-`) || PathPrefix(`/-/`) )
+
+      # Public results don't require authentication
+      traefik.http.routers.oss-2021.priority: 1
       traefik.http.routers.oss-2021.rule: >
         Host(`2021.oss.6k2.ru`) || 
         Host(`2021.xn--n1aga.xn--62-2lc.xn--p1ai`) ||
@@ -322,7 +334,7 @@ services:
     env_file: .env
     labels:
       traefik.enable: 'true'
-      traefik.http.routers.oss-2023.middlewares: auth@file
+      traefik.http.routers.oss-2023.middlewares: authelia@file
       traefik.http.routers.oss-2023.rule: >
         Host(`oss.6k2.ru`) || 
         Host(`2023.oss.6k2.ru`) || 
