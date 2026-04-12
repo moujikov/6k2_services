@@ -21,12 +21,22 @@ http:
         address: http://authentik:9000/outpost.goauthentik.io/auth/traefik
         maxResponseBodySize: 16384
         authResponseHeaders:
-          - X-authentik-username
-          - X-authentik-groups
-          - X-authentik-entitlements
-          - X-authentik-email
-          - X-authentik-name
-          - X-authentik-uid
+          # To allow Bearer auth:
+          - Authorization
+
+          # Custom headers to check / display in applications:
+          - X-App-User
+          - X-App-Groups
+          - X-App-User-Email
+          - X-App-User-Name
+
+          # Authentik-specific standard headers:
+          # - X-authentik-username
+          # - X-authentik-groups
+          # - X-authentik-entitlements
+          # - X-authentik-email
+          # - X-authentik-name
+          # - X-authentik-uid
 
     ip-whitelist:
       ipAllowList:
