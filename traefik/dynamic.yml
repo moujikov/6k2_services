@@ -29,6 +29,7 @@ http:
           - X-App-Groups
           - X-App-User-Email
           - X-App-User-Name
+          - X-App-Auth-Token
 
           # Authentik-specific standard headers:
           # - X-authentik-username
