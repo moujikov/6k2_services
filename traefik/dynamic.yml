@@ -42,8 +42,8 @@ http:
     authHeaders:
       headers:
         customRequestHeaders:
-          X-Auth-Token: ABC1234567890
-          Authorization: Bearer ABC1234567890
+          X-Auth-Token: '{{ file.Read "/run/secrets/timeweb_auth_token" }}'
+          Authorization: 'Bearer {{ file.Read "/run/secrets/timeweb_auth_token" }}'
 
     ip-whitelist:
       ipAllowList:
