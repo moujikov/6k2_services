@@ -3,7 +3,30 @@ api:
   disableDashboardAd: true
 
 log:
-  level: TRACE
+  level: INFO
+
+accessLog:
+  # JSON format
+  format: json
+  # Filter on status codes, retry attempts and minimal duration
+  # filters:
+    # statusCodes:
+      # - "200"
+      # - "300-302"
+    # retryAttempts: true
+    # minDuration: "10ms"
+  fields:
+    # Keep all the fields by default
+    defaultMode: keep
+    # names:
+      # Drop the Field ClientUserName
+      # ClientUsername: drop
+    headers:
+      # Keep all the headers by default
+      defaultMode: keep
+      # names:
+        # X-Auth-Token: drop
+        # Authorization: drop
 
 entryPoints:
   web:
