@@ -20,16 +20,17 @@ http:
       forwardAuth:
         address: http://authentik:9000/outpost.goauthentik.io/auth/traefik
         maxResponseBodySize: 16384
-        authResponseHeaders:
-          # To allow Bearer auth:
-          - Authorization
+        authResponseHeadersRegex: ^X-Auth-
+        # authResponseHeaders:
+        #   # To allow Bearer auth:
+        #   - Authorization
 
-          # Custom headers to check / display in applications:
-          - X-App-User
-          - X-App-Groups
-          - X-App-User-Email
-          - X-App-User-Name
-          - X-App-Auth-Token
+        #   # Custom headers to check / display in applications:
+        #   - X-App-User
+        #   - X-App-Groups
+        #   - X-App-User-Email
+        #   - X-App-User-Name
+        #   - X-App-Auth-Token
 
           # Authentik-specific standard headers:
           # - X-authentik-username
