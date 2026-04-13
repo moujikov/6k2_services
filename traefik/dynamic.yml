@@ -5,7 +5,7 @@ http:
       chain:
         middlewares:
           - authentik
-          - authHeaders
+          - auth-headers
 
     authelia:
       forwardAuth:
@@ -21,29 +21,17 @@ http:
       forwardAuth:
         address: http://authentik:9000/outpost.goauthentik.io/auth/traefik
         maxResponseBodySize: 16384
-        authResponseHeadersRegex: ^X-Auth-
         authResponseHeaders:
-          # To allow Bearer auth:
-          - Authorization
-
-          # Custom headers to check / display in applications:
-          - X-Auth-Token
-          - X-Auth-User
-          - X-Auth-Groups
-          - X-Auth-User-Email
-          - X-Auth-User-Name
-
-          # Authentik-specific standard headers:
           - X-Authentik-Username
           - X-Authentik-Groups
           - X-Authentik-Email
           - X-Authentik-Name
 
-    authHeaders:
+    auth-headers:
       headers:
         customRequestHeaders:
-          X-Auth-Token: '{{ env "TIMEWEBCLOUD_AUTH_TOKEN_FILE" }}'
-          Authorization: 'Bearer {{ env "TIMEWEBCLOUD_AUTH_TOKEN_FILE" }}'
+          X-Auth-Token: {{ env "SERVICES_AUTH_TOKEN" }}
+          Authorization: Bearer {{ env "SERVICES_AUTH_TOKEN" }}
 
     ip-whitelist:
       ipAllowList:

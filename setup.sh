@@ -103,6 +103,10 @@ generate_secret() {
 services_files='/usr/local/share/services'
 install -m 0755 -d "$services_files"
 
+common_files="$services_files/common"
+install -m 0755 -d "$common_files"
+install -m 0700 -d "$common_files/auth"
+
 postgres_files="$services_files/postgres"
 install -m 0755 -d "$postgres_files"
 install -m 0700 -d "$postgres_files/auth"
@@ -161,6 +165,8 @@ if [ -n "$SMTP_PASSWORD_AUTHELIA" ]; then
 fi
 
 
+generate_secret "$common_files/auth/auth_token" 64
+set_secret "$common_files/auth/auth_token.env" "SERVICES_AUTH_TOKEN=$(cat $common_files/auth/auth_token)"
 
 generate_secret "$postgres_files/auth/postgres_password" 32 70:70     # Read only by postgres
 generate_secret "$postgres_files/auth/authelia_password" 32 70:1000   # Read by postgres and authelia
