@@ -303,6 +303,22 @@ services:
           memory: 256mb
 
 
+  static:
+    container_name: static
+    image: nginx:1.29-alpine
+    restart: unless-stopped
+    volumes:
+      - ./static:/usr/share/nginx/html:ro
+    labels:
+      traefik.enable: 'true'
+      traefik.http.routers.static.rule: >
+        Host(`static.6k2.ru`)
+    deploy:
+      resources:
+        limits:
+          memory: 128mb
+
+
   oss-2021:
     container_name: oss-2021
     image: moujikov/6k2_oss-2021

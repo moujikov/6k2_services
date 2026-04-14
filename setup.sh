@@ -158,6 +158,12 @@ if [ -n "$OAUTH_SECRET_YANDEX" ]; then
   set_secret "$oauth_files/secrets/yandex" "$OAUTH_SECRET_YANDEX" 1001:1001
 fi
 
+read -s -p "Provide VK OAuth Client secret (empty to skip): " OAUTH_SECRET_VK
+echo
+if [ -n "$OAUTH_SECRET_VK" ]; then
+  set_secret "$oauth_files/secrets/vk" "$OAUTH_SECRET_VK" 1001:1001
+fi
+
 read -s -p "Provide SMTP password for Authelia (empty to skip): " SMTP_PASSWORD_AUTHELIA
 echo
 if [ -n "$SMTP_PASSWORD_AUTHELIA" ]; then
