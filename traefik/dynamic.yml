@@ -28,25 +28,27 @@ http:
           - X-Authentik-Name
 
     auth-headers:
-      htransformation:
-        - Type: Set
-          Header: Authorization
-          Value: Bearer {{ env "SERVICES_AUTH_TOKEN" }}
-        - Type: Set
-          Header: X-Auth-Token
-          Value: {{ env "SERVICES_AUTH_TOKEN" }}
-        - Type: Rename
-          Header: X-Authentik-Username
-          Value: X-Auth-User
-        - Type: Rename
-          Header: X-Authentik-Groups
-          Value: X-Auth-Groups
-        - Type: Rename
-          Header: X-Authentik-Email
-          Value: X-Auth-User-Email
-        - Type: Rename
-          Header: X-Authentik-Name
-          Value: X-Auth-User-Name
+      plugin:
+        htransformation:
+          Rules:
+            - Type: Set
+              Header: Authorization
+              Value: Bearer {{ env "SERVICES_AUTH_TOKEN" }}
+            - Type: Set
+              Header: X-Auth-Token
+              Value: {{ env "SERVICES_AUTH_TOKEN" }}
+            - Type: Rename
+              Header: X-Authentik-Username
+              Value: X-Auth-User
+            - Type: Rename
+              Header: X-Authentik-Groups
+              Value: X-Auth-Groups
+            - Type: Rename
+              Header: X-Authentik-Email
+              Value: X-Auth-User-Email
+            - Type: Rename
+              Header: X-Authentik-Name
+              Value: X-Auth-User-Name
 
     ip-whitelist:
       ipAllowList:
