@@ -165,12 +165,12 @@ if [ -n "$SMTP_PASSWORD_AUTHELIA" ]; then
 fi
 
 
-generate_secret "$common_files/auth/auth_token" 64
+generate_secret "$common_files/auth/auth_token" 64 82:82              # Read by www-data only
 set_secret "$common_files/auth/auth_token.env" "SERVICES_AUTH_TOKEN=$(cat $common_files/auth/auth_token)"
 
-generate_secret "$postgres_files/auth/postgres_password" 32 70:70     # Read only by postgres
+generate_secret "$postgres_files/auth/postgres_password" 32 70:70     # Read by postgres only
 generate_secret "$postgres_files/auth/authelia_password" 32 70:1000   # Read by postgres and authelia
-generate_secret "$postgres_files/auth/authentik_password" 32 70:1000   # Read by postgres and authentik
+generate_secret "$postgres_files/auth/authentik_password" 32 70:1000  # Read by postgres and authentik
 generate_secret "$postgres_files/auth/lldap_password" 32 70:1000      # Read by postgres and lldap
 
 lldap_database_url="postgres://lldap:$(cat $postgres_files/auth/lldap_password)@postgres/lldap"
