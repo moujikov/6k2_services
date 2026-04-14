@@ -15,6 +15,12 @@ log:
 #         X-Auth-Token: drop
 #         Authorization: drop
 
+experimental:
+  plugins:
+    htransformation:
+      moduleName: github.com/tomMoulard/htransformation
+      version: v0.3.3
+
 entryPoints:
   web:
     address: ':80'
