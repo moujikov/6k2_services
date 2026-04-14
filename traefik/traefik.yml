@@ -3,7 +3,7 @@ api:
   disableDashboardAd: true
 
 log:
-  level: WARN
+  level: TRACE
 
 # accessLog:
 #   format: json
