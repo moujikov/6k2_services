@@ -101,7 +101,6 @@ services:
     expose: [ 9000 ]    # Web front-end and ForwardAuth endpoint
     labels:
       traefik.enable: 'true'
-      traefik.http.routers.authentik.middlewares: ip-whitelist@file
       traefik.http.routers.authentik.rule: >
         Host(`authentik.6k2.ru`) ||
         Host(`auth.6k2.ru`)
