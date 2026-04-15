@@ -381,8 +381,18 @@ services:
     image: moujikov/6k2_osch-2024
     restart: unless-stopped
     env_file: .env
+    secrets:
+      - auth_token
     labels:
       traefik.enable: 'true'
+
+      # Private area requires authentication
+      traefik.http.routers.osch-2024-private.priority: 100
+      traefik.http.routers.osch-2024-private.middlewares: auth@file
+      traefik.http.routers.osch-2024-private.rule: >
+        Host(`2024.os4.6k2.ru`) && ( Path(`/-`) || PathPrefix(`/-/`) )
+
+      traefik.http.routers.osch-2024.priority: 1
       traefik.http.routers.osch-2024.rule: >
         Host(`2024.os4.6k2.ru`) || 
         Host(`2024.xn--n1ags.xn--62-2lc.xn--p1ai`)
