@@ -457,7 +457,7 @@ services:
     restart: unless-stopped
     env_file: .env
     secrets:
-      - auth_token_nginx
+      - auth_token.nginx.conf
     labels:
       com.centurylinklabs.watchtower.enable: 'true'
       traefik.enable: 'true'
@@ -480,7 +480,7 @@ volumes:
 secrets:
   auth_token:
     file: /usr/local/share/services/common/auth/auth_token
-  auth_token_nginx:
+  auth_token.nginx.conf:
     file: /usr/local/share/services/common/auth/auth_token.nginx.conf
   timeweb_auth_token:
     file: /usr/local/share/services/oauth/tokens/timeweb
