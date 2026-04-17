@@ -293,7 +293,7 @@ services:
     expose: [ 61208 ]    # Web front-end 
     labels:
       traefik.enable: 'true'
-      traefik.http.routers.glances.middlewares: authelia@file
+      traefik.http.routers.glances.middlewares: auth@file
       traefik.http.routers.glances.rule: >
         Host(`glances.6k2.ru`)
     deploy:
