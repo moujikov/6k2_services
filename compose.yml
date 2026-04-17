@@ -441,6 +441,8 @@ services:
     env_file: .env
     volumes:
       - utility-bills_data:/var/app-data
+    secrets:
+      - auth_token
     labels:
       traefik.enable: 'true'
       traefik.http.routers.utility-bills.rule: >
