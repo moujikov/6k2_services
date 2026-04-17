@@ -307,7 +307,8 @@ services:
     image: nginx:1.29-alpine-slim
     restart: unless-stopped
     volumes:
-      - ./static:/usr/share/nginx/html:ro
+      - ./static/web:/web:ro
+      - ./nginx:/etc/nginx:ro
     labels:
       traefik.enable: 'true'
       traefik.http.routers.static.rule: >
