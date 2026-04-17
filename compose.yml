@@ -308,7 +308,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./static/web:/web:ro
-      - ./static/nginx:/etc/nginx:ro
+      - ./static/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     labels:
       traefik.enable: 'true'
       traefik.http.routers.static.rule: >
