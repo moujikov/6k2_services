@@ -304,7 +304,7 @@ services:
 
   static:
     container_name: static
-    image: nginx:1.29-alpine
+    image: nginx:1.29-alpine-slim
     restart: unless-stopped
     volumes:
       - ./static:/usr/share/nginx/html:ro
