@@ -441,8 +441,6 @@ services:
     env_file: .env
     volumes:
       - utility-bills_data:/var/app-data
-    secrets:
-      - auth_token
     labels:
       traefik.enable: 'true'
       traefik.http.routers.utility-bills.rule: >
@@ -458,6 +456,8 @@ services:
     image: moujikov/6k2_alt-chat
     restart: unless-stopped
     env_file: .env
+    secrets:
+      - auth_token
     labels:
       com.centurylinklabs.watchtower.enable: 'true'
       traefik.enable: 'true'
