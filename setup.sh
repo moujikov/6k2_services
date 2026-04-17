@@ -173,6 +173,8 @@ fi
 
 generate_secret "$common_files/auth/auth_token" 64 82:82              # Read by www-data only
 set_secret "$common_files/auth/auth_token.env" "SERVICES_AUTH_TOKEN=$(cat $common_files/auth/auth_token)"
+set_secret "$common_files/auth/auth_token.nginx.conf" \
+  "set $auth_token '$(cat $common_files/auth/auth_token)';" 100:101   # Read by nginx only
 
 generate_secret "$postgres_files/auth/postgres_password" 32 70:70     # Read by postgres only
 generate_secret "$postgres_files/auth/authelia_password" 32 70:1000   # Read by postgres and authelia
