@@ -461,6 +461,7 @@ services:
     labels:
       com.centurylinklabs.watchtower.enable: 'true'
       traefik.enable: 'true'
+      traefik.http.routers.alt-chat.middlewares: auth@file
       traefik.http.routers.alt-chat.rule: >
         Host(`a4.6k2.ru`)
     deploy:
