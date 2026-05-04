@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -eu -o pipefail
+set -eu
 
 if [ "$TERM" != 'dumb' ] && [ "$TERM" != 'unknown' ]; then
   black=$(tput setaf 0); red=$(tput setaf 1); green=$(tput setaf 2); yellow=$(tput setaf 3); blue=$(tput setaf 4); magenta=$(tput setaf 5); cyan=$(tput setaf 6); white=$(tput setaf 7)
@@ -9,7 +9,7 @@ if [ "$TERM" != 'dumb' ] && [ "$TERM" != 'unknown' ]; then
 fi
 
 if [ $EUID -ne 0 ]; then
-   echo "${bold}This script is not running as root. Please use sudo.${reset}"
+   echo "${bold}This script should be run with root privileges. Please use sudo.${reset}"
    exit 1
 fi
 
@@ -22,11 +22,16 @@ OS_RELEASE=$(. /etc/os-release && echo $VERSION_CODENAME)
 
 #######################  INSTALLING SYSTEM PACKAGES  #######################
 
-echo "${nl}${nl}${bold}Installing system packages:${reset}"
+echo "${nl}${bold}Installing system packages:${reset}"
 
 apt-get update
 apt-get install -y --no-install-recommends \
   ca-certificates curl gnupg apache2-utils tree
+
+
+#######################  INSTALLING DOCKER  #######################
+
+echo "${nl}${bold}Installing Docker:${reset}"
 
 install -m 0755 -d '/etc/apt/keyrings'
 
@@ -41,10 +46,10 @@ fi
 
 apt-get update
 
-if apt-cache policy docker-ce | grep -q "$REPO"; then
-  echo "Docker repository setup successfully."
+if apt-cache policy docker-ce | grep -q "$REPO" ; then
+  echo "${bold}Successfully set up repository, installing Docker...${reset}"
 else
-  echo "ERROR: Docker repository setup failed."
+  echo "${bold}${red}ERROR: Docker repository setup failed.${reset}"
   exit 1
 fi
 
@@ -54,7 +59,7 @@ apt-get install -y --no-install-recommends \
 
 #######################  SETTING UP SECRETS  #######################
 
-echo "${nl}${nl}${bold}Setting up secrets:${reset}"
+echo "${nl}${bold}Setting up secrets:${reset}"
 
 DEFAULT_OWNERSHIP=1000:1000     # Owned and accessed by container mock user
 DEFAULT_PERMISSIONS=0440        # Readable by owner and group
@@ -230,7 +235,7 @@ install -m 0755 -o 1000 -g 1000 -d "$mountpoint/media"
 
 #######################  STARTING SERVICES  #######################
 
-echo "${nl}${nl}${bold}Starting up services:${reset}"
+echo "${nl}${bold}Starting up services:${reset}"
 
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 docker compose --file "$DIR/compose.yml" up --detach
