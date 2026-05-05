@@ -26,7 +26,7 @@ echo "${nl}${bold}Installing system packages:${reset}"
 
 apt-get update
 apt-get install -y --no-install-recommends \
-  ca-certificates curl gnupg apache2-utils tree
+  ca-certificates curl gnupg apache2-utils opendkim-tools tree
 
 
 #######################  INSTALLING DOCKER  #######################
@@ -144,6 +144,7 @@ install -m 0700 -d "$oauth_files/secrets"
 smtp_files="$secrets/smtp"
 install -m 0755 -d "$smtp_files"
 install -m 0700 -d "$smtp_files/auth"
+install -m 0700 -d "$smtp_files/dkim"
 
 
 DOCKER_USER='moujikov'
@@ -220,6 +221,17 @@ generate_secret "$lldap_files/keys/key_seed" 64
 generate_secret "$lldap_files/keys/jwt_secret" 64
 generate_secret "$lldap_files/auth/admin_password" 16
 generate_secret "$lldap_files/auth/authelia_password" 16
+
+
+if [ -f "$smtp_files/dkim/mailing-list.private" ]; then
+  echo "File '$smtp_files/dkim/mailing-list.private' already exists. Delete it to regenerate DKIM keys for 'mailing-list._domainkey.6k2.ru'. Skipping..."
+else
+  echo "Generating DKIM keys for 'mailing-list._domainkey.6k2.ru'..."
+  opendkim-genkey --selector=mailing-list --domain=6k2.ru \
+                  --nosubdomains --restrict \
+                  --directory="$smtp_files/dkim"
+fi
+
 
 echo "${nl}${bold}All secrets have been set up. Current file structure:${reset}"
 tree $secrets
