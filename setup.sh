@@ -19,19 +19,19 @@ install -m 0755 -d "$services"
 
 #######################  INSTALLING SYSTEM PACKAGES  #######################
 
-if [ ! -f "$services"/-system-packages-installed ]; then
+if [ ! -f "$services"/.system-packages-installed ]; then
   echo "${nl}${bold}Installing system packages:${reset}"
 
   apt-get update
   apt-get install -y --no-install-recommends \
     ca-certificates curl gnupg apache2-utils opendkim-tools tree
 
-  touch "$services"/-system-packages-installed
+  touch "$services"/.system-packages-installed
 fi
 
 #######################  INSTALLING DOCKER  #######################
 
-if [ ! -f "$services"/-docker-installed ]; then
+if [ ! -f "$services"/.docker-installed ]; then
   echo "${nl}${bold}Installing Docker:${reset}"
 
   REPO='https://download.docker.com/linux/ubuntu'
@@ -63,7 +63,7 @@ if [ ! -f "$services"/-docker-installed ]; then
   apt-get install -y --no-install-recommends \
     docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-  touch "$services"/-docker-installed
+  touch "$services"/.docker-installed
 fi
 
 #######################  SETTING UP SECRETS  #######################
@@ -156,37 +156,40 @@ install -m 0700 -d "$smtp_files/auth"
 install -m 0700 -d "$smtp_files/dkim"
 
 
-DOCKER_USER='moujikov'
-read -s -p "Provide Docker Hub access token (empty to skip): " DOCKER_PAT
-echo
-if [ -n "$DOCKER_PAT" ]; then
-  docker login --username "$DOCKER_USER" --password "$DOCKER_PAT"
-fi
+if [ ! -f "$services"/.tokens-provided ]; then
+  DOCKER_USER='moujikov'
+  read -s -p "Provide Docker Hub access token (empty to skip): " DOCKER_PAT
+  echo
+  if [ -n "$DOCKER_PAT" ]; then
+    docker login --username "$DOCKER_USER" --password "$DOCKER_PAT"
+  fi
 
-read -s -p "Provide Timeweb Cloud auth token (empty to skip): " TIMEWEB_AUTH_TOKEN
-echo
-if [ -n "$TIMEWEB_AUTH_TOKEN" ]; then
-  set_secret "$oauth_files/tokens/timeweb" "$TIMEWEB_AUTH_TOKEN"
-fi
+  read -s -p "Provide Timeweb Cloud auth token (empty to skip): " TIMEWEB_AUTH_TOKEN
+  echo
+  if [ -n "$TIMEWEB_AUTH_TOKEN" ]; then
+    set_secret "$oauth_files/tokens/timeweb" "$TIMEWEB_AUTH_TOKEN"
+  fi
 
-read -s -p "Provide Yandex OAuth Client secret (empty to skip): " OAUTH_SECRET_YANDEX
-echo
-if [ -n "$OAUTH_SECRET_YANDEX" ]; then
-  set_secret "$oauth_files/secrets/yandex" "$OAUTH_SECRET_YANDEX" 1001:1001
-fi
+  read -s -p "Provide Yandex OAuth Client secret (empty to skip): " OAUTH_SECRET_YANDEX
+  echo
+  if [ -n "$OAUTH_SECRET_YANDEX" ]; then
+    set_secret "$oauth_files/secrets/yandex" "$OAUTH_SECRET_YANDEX" 1001:1001
+  fi
 
-read -s -p "Provide VK OAuth Client secret (empty to skip): " OAUTH_SECRET_VK
-echo
-if [ -n "$OAUTH_SECRET_VK" ]; then
-  set_secret "$oauth_files/secrets/vk" "$OAUTH_SECRET_VK" 1001:1001
-fi
+  read -s -p "Provide VK OAuth Client secret (empty to skip): " OAUTH_SECRET_VK
+  echo
+  if [ -n "$OAUTH_SECRET_VK" ]; then
+    set_secret "$oauth_files/secrets/vk" "$OAUTH_SECRET_VK" 1001:1001
+  fi
 
-read -s -p "Provide SMTP password for Authelia (empty to skip): " SMTP_PASSWORD_AUTHELIA
-echo
-if [ -n "$SMTP_PASSWORD_AUTHELIA" ]; then
-  set_secret "$smtp_files/auth/authelia_password" "$SMTP_PASSWORD_AUTHELIA"
-fi
+  read -s -p "Provide SMTP password for Authelia (empty to skip): " SMTP_PASSWORD_AUTHELIA
+  echo
+  if [ -n "$SMTP_PASSWORD_AUTHELIA" ]; then
+    set_secret "$smtp_files/auth/authelia_password" "$SMTP_PASSWORD_AUTHELIA"
+  fi
 
+  touch "$services"/.tokens-provided
+fi 
 
 generate_secret "$common_files/auth/auth_token" 64 82:82              # Read by www-data only
 set_secret "$common_files/auth/auth_token.env" "SERVICES_AUTH_TOKEN=$(cat $common_files/auth/auth_token)"
