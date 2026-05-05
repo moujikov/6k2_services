@@ -150,7 +150,7 @@ install -m 0700 -d "$oauth_files/secrets"
 smtp_files="$secrets/smtp"
 install -m 0755 -d "$smtp_files"
 install -m 0700 -d "$smtp_files/auth"
-install -m 0700 -d "$smtp_files/dkim"
+install -m 0700 -d "$smtp_files/dkim" -o 100 -g 101  # opendkim user and group
 
 
 if [ ! -f "$services"/.tokens-provided ]; then
@@ -237,7 +237,7 @@ if [ -f "$smtp_files/auth/passwords" ]; then
 else
   echo "Generating SMTP server passwords..."
   ensure_secret_file "$smtp_files/auth/passwords"
-  ensure_secret_file "$smtp_files/auth/passwords.hashed"
+  ensure_secret_file "$smtp_files/auth/passwords.hashed" 101:102  # postfix user and group
 
   users=(kvado)
 
@@ -256,8 +256,9 @@ else
   opendkim-genkey --selector=mailing-list --domain=6k2.ru \
                   --nosubdomains --restrict \
                   --directory="$smtp_files/dkim"
-  chown $DEFAULT_OWNERSHIP "$smtp_files/dkim/mailing-list.private" \
-                           "$smtp_files/dkim/mailing-list.txt"
+  # Set ownership so that opendkim user and group:
+  chown 100:101 "$smtp_files/dkim/mailing-list.private" \
+                "$smtp_files/dkim/mailing-list.txt"
 fi
 
 
