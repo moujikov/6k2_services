@@ -107,41 +107,41 @@ generate_secret() {
   fi
 }
 
-services_files='/usr/local/share/services'
-install -m 0755 -d "$services_files"
+secrets='/data/secrets'
+install -m 0755 -d "$secrets"
 
-common_files="$services_files/common"
+common_files="$secrets/common"
 install -m 0755 -d "$common_files"
 install -m 0700 -d "$common_files/auth"
 
-postgres_files="$services_files/postgres"
+postgres_files="$secrets/postgres"
 install -m 0755 -d "$postgres_files"
 install -m 0700 -d "$postgres_files/auth"
 
-redis_files="$services_files/redis"
+redis_files="$secrets/redis"
 install -m 0755 -d "$redis_files"
 install -m 0700 -d "$redis_files/auth"
 
-authelia_files="$services_files/authelia"
+authelia_files="$secrets/authelia"
 install -m 0755 -d "$authelia_files"
 install -m 0700 -d "$authelia_files/keys"
 
-authentik_files="$services_files/authentik"
+authentik_files="$secrets/authentik"
 install -m 0755 -d "$authentik_files"
 install -m 0700 -d "$authentik_files/auth"
 install -m 0700 -d "$authentik_files/keys"
 
-lldap_files="$services_files/lldap"
+lldap_files="$secrets/lldap"
 install -m 0755 -d "$lldap_files"
 install -m 0700 -d "$lldap_files/auth"
 install -m 0700 -d "$lldap_files/keys"
 
-oauth_files="$services_files/oauth"
+oauth_files="$secrets/oauth"
 install -m 0755 -d "$oauth_files"
 install -m 0700 -d "$oauth_files/tokens"
 install -m 0700 -d "$oauth_files/secrets"
 
-smtp_files="$services_files/smtp"
+smtp_files="$secrets/smtp"
 install -m 0755 -d "$smtp_files"
 install -m 0700 -d "$smtp_files/auth"
 
@@ -222,7 +222,7 @@ generate_secret "$lldap_files/auth/admin_password" 16
 generate_secret "$lldap_files/auth/authelia_password" 16
 
 echo "${nl}${bold}All secrets have been set up. Current file structure:${reset}"
-tree $services_files
+tree $secrets
 
 
 

@@ -10,7 +10,7 @@ services:
       - 443:443
     env_file: 
       - .env
-      - /usr/local/share/services/common/auth/auth_token.env
+      - /data/secrets/common/auth/auth_token.env
     environment:
       TIMEWEBCLOUD_AUTH_TOKEN_FILE: /run/secrets/timeweb_auth_token
     volumes:
@@ -174,7 +174,7 @@ services:
     restart: unless-stopped
     env_file:
       - .env
-      - /usr/local/share/services/postgres/auth/lldap_url.env
+      - /data/secrets/postgres/auth/lldap_url.env
     environment:
       RUST_LOG: warn
       LLDAP_KEY_SEED_FILE: /run/secrets/lldap_key_seed
@@ -472,48 +472,73 @@ services:
 
 volumes:
   certificates:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /data/volumes/certificates
   postgres_database:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /data/volumes/postgres_database
   authentik_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /data/volumes/authentik_data
   redis_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /data/volumes/redis_data
   utility-bills_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /data/volumes/utility-bills_data
 
 
 secrets:
   auth_token:
-    file: /usr/local/share/services/common/auth/auth_token
+    file: /data/secrets/common/auth/auth_token
   auth_token.nginx.conf:
-    file: /usr/local/share/services/common/auth/auth_token.nginx.conf
+    file: /data/secrets/common/auth/auth_token.nginx.conf
   timeweb_auth_token:
-    file: /usr/local/share/services/oauth/tokens/timeweb
+    file: /data/secrets/oauth/tokens/timeweb
   oauth_yandex_client_secret:
-    file: /usr/local/share/services/oauth/secrets/yandex
+    file: /data/secrets/oauth/secrets/yandex
   db_password_postgres:
-    file: /usr/local/share/services/postgres/auth/postgres_password
+    file: /data/secrets/postgres/auth/postgres_password
   db_password_authelia:
-    file: /usr/local/share/services/postgres/auth/authelia_password
+    file: /data/secrets/postgres/auth/authelia_password
   db_password_authentik:
-    file: /usr/local/share/services/postgres/auth/authentik_password
+    file: /data/secrets/postgres/auth/authentik_password
   db_password_lldap:
-    file: /usr/local/share/services/postgres/auth/lldap_password
+    file: /data/secrets/postgres/auth/lldap_password
   redis_password:
-    file: /usr/local/share/services/redis/auth/redis_password
+    file: /data/secrets/redis/auth/redis_password
   smtp_password_authelia:
-    file: /usr/local/share/services/smtp/auth/authelia_password
+    file: /data/secrets/smtp/auth/authelia_password
   authelia_storage_encryption_key:
-    file: /usr/local/share/services/authelia/keys/storage_encryption_key
+    file: /data/secrets/authelia/keys/storage_encryption_key
   authelia_session_secret:
-    file: /usr/local/share/services/authelia/keys/session_secret
+    file: /data/secrets/authelia/keys/session_secret
   authelia_reset_password_secret:
-    file: /usr/local/share/services/authelia/keys/reset_password_secret
+    file: /data/secrets/authelia/keys/reset_password_secret
   authentik_session_secret:
-    file: /usr/local/share/services/authentik/keys/session_secret
+    file: /data/secrets/authentik/keys/session_secret
   authentik_admin_password:
-    file: /usr/local/share/services/authentik/auth/admin_password
+    file: /data/secrets/authentik/auth/admin_password
   lldap_key_seed:
-    file: /usr/local/share/services/lldap/keys/key_seed
+    file: /data/secrets/lldap/keys/key_seed
   lldap_jwt_secret:
-    file: /usr/local/share/services/lldap/keys/jwt_secret
+    file: /data/secrets/lldap/keys/jwt_secret
   lldap_password_admin:
-    file: /usr/local/share/services/lldap/auth/admin_password
+    file: /data/secrets/lldap/auth/admin_password
   lldap_password_authelia:
-    file: /usr/local/share/services/lldap/auth/authelia_password
+    file: /data/secrets/lldap/auth/authelia_password
