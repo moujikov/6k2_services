@@ -490,8 +490,8 @@ services:
     expose: [ 25 ]    # SMTP endpoint
     labels:
       traefik.enable: 'true'
-      traefik.http.routers.mailer.entrypoints: smtps
-      traefik.http.routers.mailer.rule: >
+      traefik.tcp.routers.mailer.entrypoints: smtps
+      traefik.tcp.routers.mailer.rule: >
         Host(`smtp.6k2.ru`)
     deploy:
       resources:
