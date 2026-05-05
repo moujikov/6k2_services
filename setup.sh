@@ -209,7 +209,7 @@ generate_secret "$redis_files/auth/redis_password" 64 1001:1000       # Read by 
 
 authelia_storage_encryption_key="$authelia_files/keys/storage_encryption_key"
 if [ -f "$authelia_storage_encryption_key" ]; then
-  echo "File '$authelia_storage_encryption_key' already exists. Delete it to regenerate. Skipping..."
+  echo "File '$authelia_storage_encryption_key' exists. Delete to regenerate. Skipping..."
 else
   read -s -p "Provide Authelia storage encryption key (empty to generate): " AUTHELIA_STORAGE_ENCRYPTION_KEY
   echo
@@ -236,7 +236,7 @@ generate_secret "$lldap_files/auth/authelia_password" 16
 
 
 if [ -f "$smtp_files/dkim/mailing-list.private" ]; then
-  echo "File '$smtp_files/dkim/mailing-list.private' already exists. Delete it to regenerate DKIM keys for 'mailing-list._domainkey.6k2.ru'. Skipping..."
+  echo "File '$smtp_files/dkim/mailing-list.private' exists. Delete to regenerate. Skipping..."
 else
   echo "Generating DKIM keys for 'mailing-list._domainkey.6k2.ru'..."
   opendkim-genkey --selector=mailing-list --domain=6k2.ru \
