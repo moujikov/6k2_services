@@ -24,7 +24,7 @@ if [ ! -f "$services"/.system-packages-installed ]; then
 
   apt-get update
   apt-get install -y --no-install-recommends \
-    ca-certificates curl gnupg apache2-utils opendkim-tools tree
+    ca-certificates curl gnupg apache2-utils whois opendkim-tools tree
 
   touch "$services"/.system-packages-installed
 fi
@@ -108,10 +108,7 @@ generate_secret() {
   else
     install -m "$permissions" -o "$owner" -g "$group" /dev/null "$file"
     printf "$prefix" >> "$file"
-    (
-      set +o pipefail   # Disable pipefail since cat will fail after SIGPIPE when head exits
-      cat /dev/random | LC_ALL=C tr -dc 'A-Za-z0-9' | head -c $length >> "$file"
-    ) || exit $?
+    tr -dc 'A-Za-z0-9' < /dev/urandom  | head -c $length >> "$file"
     echo "Generated secret in '$file'"
   fi
 }
@@ -234,6 +231,23 @@ generate_secret "$lldap_files/keys/jwt_secret" 64
 generate_secret "$lldap_files/auth/admin_password" 16
 generate_secret "$lldap_files/auth/authelia_password" 16
 
+
+if [ -f "$smtp_files/auth/passwords" ]; then
+  echo "File '$smtp_files/auth/passwords' exists. Delete to regenerate. Skipping..."
+else
+  echo "Generating SMTP server passwords..."
+  ensure_secret_file "$smtp_files/auth/passwords"
+  ensure_secret_file "$smtp_files/auth/passwords.hashed"
+
+  users=(kvado)
+
+  for user in "${users[@]}"; do
+    password="$(LC_ALL=C tr -dc 'A-Za-z0-9' < /dev/random | head -c 16)"
+    hashed_password="$(mkpasswd -m sha-512 "$password")"
+    echo "$user:$password" >> "$smtp_files/auth/passwords"
+    echo "$user:$hashed_password" >> "$smtp_files/auth/passwords.hashed"
+  done
+fi
 
 if [ -f "$smtp_files/dkim/mailing-list.private" ]; then
   echo "File '$smtp_files/dkim/mailing-list.private' exists. Delete to regenerate. Skipping..."

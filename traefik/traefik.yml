@@ -34,6 +34,7 @@ entryPoints:
       accessLogs: false
       metrics: false
       tracing: false
+
   websecure:
     address: ':443'
     asDefault: true
@@ -68,6 +69,14 @@ entryPoints:
           - main: xn--b1ayja.xn--p1ai               # Domain: восс.рф
             sans:                                   # Subdomains:
               - '*.xn--b1ayja.xn--p1ai'             #   *.восс.рф
+
+  smtps:
+    address: ':465'
+    http:
+      tls:
+        certResolver: letsencrypt
+        domains: [ 6k2.ru ]
+
 
 certificatesResolvers:
   letsencrypt:

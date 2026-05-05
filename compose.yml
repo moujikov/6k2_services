@@ -472,6 +472,31 @@ services:
         limits:
           memory: 128mb
 
+  mailer:
+    container_name: mailer
+    image: mwader/postfix-relay:1.2
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      SASL_Passwds: /etc/postfix/sasl/sasl_passwds
+      POSTFIX_smtpd_sasl_auth_enable: yes
+      POSTFIX_smtpd_sasl_security_options: noanonymous
+      POSTFIX_smtpd_relay_restrictions: permit_sasl_authenticated,reject
+      OPENDKIM_DOMAINS: 6k2.ru=mailing-list
+    volumes:
+      - /data/secrets/smtp/dkim:/etc/opendkim/keys/6k2.ru:ro
+      - /data/secrets/smtp/auth/passwords.hashed:/etc/postfix/sasl/sasl_passwds:ro
+    expose: [ 25 ]    # SMTP endpoint
+    labels:
+      traefik.enable: 'true'
+      traefik.http.routers.mailer.entrypoints: smtps
+      traefik.http.routers.mailer.rule: >
+        Host(`smtp.6k2.ru`)
+    deploy:
+      resources:
+        limits:
+          memory: 256mb
+
 
 volumes:
   certificates:
