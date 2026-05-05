@@ -13,25 +13,25 @@ if [ $EUID -ne 0 ]; then
    exit 1
 fi
 
-6k2_services='/usr/local/share/6k2_services'
-install -m 0755 -d "$6k2_services"
+services='/usr/local/share/6k2_services'
+install -m 0755 -d "$services"
 
 
 #######################  INSTALLING SYSTEM PACKAGES  #######################
 
-if [ ! -f "$6k2_services"/-system-packages-installed ]; then
+if [ ! -f "$services"/-system-packages-installed ]; then
   echo "${nl}${bold}Installing system packages:${reset}"
 
   apt-get update
   apt-get install -y --no-install-recommends \
     ca-certificates curl gnupg apache2-utils opendkim-tools tree
 
-  touch "$6k2_services"/-system-packages-installed
+  touch "$services"/-system-packages-installed
 fi
 
 #######################  INSTALLING DOCKER  #######################
 
-if [ ! -f "$6k2_services"/-docker-installed ]; then
+if [ ! -f "$services"/-docker-installed ]; then
   echo "${nl}${bold}Installing Docker:${reset}"
 
   REPO='https://download.docker.com/linux/ubuntu'
@@ -63,7 +63,7 @@ if [ ! -f "$6k2_services"/-docker-installed ]; then
   apt-get install -y --no-install-recommends \
     docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-  touch "$6k2_services"/-docker-installed
+  touch "$services"/-docker-installed
 fi
 
 #######################  SETTING UP SECRETS  #######################
