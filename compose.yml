@@ -440,7 +440,7 @@ services:
     restart: unless-stopped
     env_file: .env
     secrets:
-      - auth_token
+      - auth_token.nginx.conf
     volumes:
       - utility-bills_data:/var/app-data
     labels:
