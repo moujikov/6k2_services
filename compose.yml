@@ -443,6 +443,7 @@ services:
       - utility-bills_data:/var/app-data
     labels:
       traefik.enable: 'true'
+      traefik.http.routers.utility-bills.middlewares: auth@file
       traefik.http.routers.utility-bills.rule: >
         Host(`bills.6k2.ru`)
     deploy:
