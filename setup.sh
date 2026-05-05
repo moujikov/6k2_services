@@ -242,6 +242,8 @@ else
   opendkim-genkey --selector=mailing-list --domain=6k2.ru \
                   --nosubdomains --restrict \
                   --directory="$smtp_files/dkim"
+  chown $DEFAULT_OWNERSHIP "$smtp_files/dkim/mailing-list.private" \
+                           "$smtp_files/dkim/mailing-list.txt"
 fi
 
 
