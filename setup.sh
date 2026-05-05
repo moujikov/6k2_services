@@ -13,49 +13,58 @@ if [ $EUID -ne 0 ]; then
    exit 1
 fi
 
-REPO='https://download.docker.com/linux/ubuntu'
-DOCKER_GPG='/etc/apt/keyrings/docker.gpg'
-DOCKER_SOURCES='/etc/apt/sources.list.d/docker.list'
-ARCH=$(dpkg --print-architecture)
-OS_RELEASE=$(. /etc/os-release && echo $VERSION_CODENAME)
+6k2_services='/usr/local/share/6k2_services'
+install -m 0755 -d "$6k2_services"
 
 
 #######################  INSTALLING SYSTEM PACKAGES  #######################
 
-echo "${nl}${bold}Installing system packages:${reset}"
+if [ ! -f "$6k2_services"/-system-packages-installed ]; then
+  echo "${nl}${bold}Installing system packages:${reset}"
 
-apt-get update
-apt-get install -y --no-install-recommends \
-  ca-certificates curl gnupg apache2-utils opendkim-tools tree
+  apt-get update
+  apt-get install -y --no-install-recommends \
+    ca-certificates curl gnupg apache2-utils opendkim-tools tree
 
+  touch "$6k2_services"/-system-packages-installed
+fi
 
 #######################  INSTALLING DOCKER  #######################
 
-echo "${nl}${bold}Installing Docker:${reset}"
+if [ ! -f "$6k2_services"/-docker-installed ]; then
+  echo "${nl}${bold}Installing Docker:${reset}"
 
-install -m 0755 -d '/etc/apt/keyrings'
+  REPO='https://download.docker.com/linux/ubuntu'
+  DOCKER_GPG='/etc/apt/keyrings/docker.gpg'
+  DOCKER_SOURCES='/etc/apt/sources.list.d/docker.list'
+  ARCH=$(dpkg --print-architecture)
+  OS_RELEASE=$(. /etc/os-release && echo $VERSION_CODENAME)
 
-if [ ! -f $DOCKER_GPG ]; then
-  curl -fsSL $REPO/gpg | gpg --dearmor -o $DOCKER_GPG
-  chmod a+r $DOCKER_GPG
+  install -m 0755 -d '/etc/apt/keyrings'
+
+  if [ ! -f $DOCKER_GPG ]; then
+    curl -fsSL $REPO/gpg | gpg --dearmor -o $DOCKER_GPG
+    chmod a+r $DOCKER_GPG
+  fi
+
+  if [ ! -f $DOCKER_SOURCES ]; then
+    > $DOCKER_SOURCES echo "deb [arch=$ARCH signed-by=$DOCKER_GPG] $REPO $OS_RELEASE stable"
+  fi
+
+  apt-get update
+
+  if apt-cache policy docker-ce | grep -q "$REPO" ; then
+    echo "${bold}Successfully set up repository, installing Docker...${reset}"
+  else
+    echo "${bold}${red}ERROR: Docker repository setup failed.${reset}"
+    exit 1
+  fi
+
+  apt-get install -y --no-install-recommends \
+    docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+  touch "$6k2_services"/-docker-installed
 fi
-
-if [ ! -f $DOCKER_SOURCES ]; then
-  > $DOCKER_SOURCES echo "deb [arch=$ARCH signed-by=$DOCKER_GPG] $REPO $OS_RELEASE stable"
-fi
-
-apt-get update
-
-if apt-cache policy docker-ce | grep -q "$REPO" ; then
-  echo "${bold}Successfully set up repository, installing Docker...${reset}"
-else
-  echo "${bold}${red}ERROR: Docker repository setup failed.${reset}"
-  exit 1
-fi
-
-apt-get install -y --no-install-recommends \
-  docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-
 
 #######################  SETTING UP SECRETS  #######################
 
