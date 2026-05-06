@@ -1,3 +1,6 @@
+global:
+  checkNewVersion: true
+
 api:
   dashboard: true
   disableDashboardAd: true
