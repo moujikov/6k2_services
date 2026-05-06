@@ -31,7 +31,7 @@ fi
 
 #######################  INSTALLING DOCKER  #######################
 
-if [ ! -f "$services"/.docker-installed ]; then
+if [ ! -f "$services/.docker-installed" ]; then
   echo "${nl}${bold}Installing Docker:${reset}"
 
   REPO='https://download.docker.com/linux/ubuntu'
@@ -63,7 +63,7 @@ if [ ! -f "$services"/.docker-installed ]; then
   apt-get install -y --no-install-recommends \
     docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
-  touch "$services"/.docker-installed
+  touch "$services/.docker-installed"
 fi
 
 #######################  SETTING UP SECRETS  #######################
@@ -157,12 +157,13 @@ install -m 0700 -d "$mailer_files/auth"
 install -m 0700 -d "$mailer_files/dkim" -o 100 -g 101  # opendkim user and group
 
 
-if [ ! -f "$services"/.tokens-provided ]; then
+if [ ! -f "$services/.tokens-provided" ]; then
   DOCKER_USER='moujikov'
   read -s -p "Provide Docker Hub access token (empty to skip): " DOCKER_PAT
   echo
   if [ -n "$DOCKER_PAT" ]; then
-    docker login --username "$DOCKER_USER" --password "$DOCKER_PAT"
+    echo $DOCKER_PAT | docker --config "$services/.docker" \
+                              login --username "$DOCKER_USER" --password-stdin
   fi
 
   read -s -p "Provide Timeweb Cloud auth token (empty to skip): " TIMEWEB_AUTH_TOKEN
@@ -189,7 +190,7 @@ if [ ! -f "$services"/.tokens-provided ]; then
     set_secret "$smtp_files/auth/authelia_password" "$SMTP_PASSWORD_AUTHELIA"
   fi
 
-  touch "$services"/.tokens-provided
+  touch "$services/.tokens-provided"
 fi 
 
 generate_secret "$common_files/auth/auth_token" 64 82:82              # Read by www-data only
@@ -283,4 +284,5 @@ install -m 0755 -o 1000 -g 1000 -d "/data/authentik_data/media"
 echo "${nl}${bold}Starting up services:${reset}"
 
 DIR="$( cd "$( dirname "$0" )" && pwd )"
-docker compose --file "$DIR/compose.yml" up --detach
+docker --config "$services/.docker" \
+       compose --file "$DIR/compose.yml" up --detach
