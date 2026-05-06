@@ -263,6 +263,10 @@ else
   # Set ownership so that opendkim user and group:
   chown 100:101 "$mailer_files/dkim/mailing-list.private" \
                 "$mailer_files/dkim/mailing-list.txt"
+
+  echo "${bold}DKIM DNS entry:${reset}"
+  cat "$mailer_files/dkim/mailing-list.txt"
+  echo
 fi
 
 
