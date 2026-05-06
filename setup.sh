@@ -150,7 +150,11 @@ install -m 0700 -d "$oauth_files/secrets"
 smtp_files="$secrets/smtp"
 install -m 0755 -d "$smtp_files"
 install -m 0700 -d "$smtp_files/auth"
-install -m 0700 -d "$smtp_files/dkim" -o 100 -g 101  # opendkim user and group
+
+mailer_files="$secrets/mailer"
+install -m 0755 -d "$mailer_files"
+install -m 0700 -d "$mailer_files/auth"
+install -m 0700 -d "$mailer_files/dkim" -o 100 -g 101  # opendkim user and group
 
 
 if [ ! -f "$services"/.tokens-provided ]; then
@@ -232,33 +236,33 @@ generate_secret "$lldap_files/auth/admin_password" 16
 generate_secret "$lldap_files/auth/authelia_password" 16
 
 
-if [ -f "$smtp_files/auth/passwords" ]; then
-  echo "File '$smtp_files/auth/passwords' exists. Delete to regenerate. Skipping..."
+if [ -f "$mailer_files/auth/passwords" ]; then
+  echo "File '$mailer_files/auth/passwords' exists. Delete to regenerate. Skipping..."
 else
   echo "Generating SMTP server passwords..."
-  ensure_secret_file "$smtp_files/auth/passwords"
-  ensure_secret_file "$smtp_files/auth/passwords.hashed" 101:102  # postfix user and group
+  ensure_secret_file "$mailer_files/auth/passwords"
+  ensure_secret_file "$mailer_files/auth/passwords.hashed" 101:102  # postfix user and group
 
   users=(kvado)
 
   for user in "${users[@]}"; do
     password="$(LC_ALL=C tr -dc 'A-Za-z0-9' < /dev/random | head -c 16)"
     hashed_password="$(mkpasswd -m sha-512 "$password")"
-    echo "$user:$password" >> "$smtp_files/auth/passwords"
-    echo "$user:$hashed_password" >> "$smtp_files/auth/passwords.hashed"
+    echo "$user:$password" >> "$mailer_files/auth/passwords"
+    echo "$user:$hashed_password" >> "$mailer_files/auth/passwords.hashed"
   done
 fi
 
-if [ -f "$smtp_files/dkim/mailing-list.private" ]; then
-  echo "File '$smtp_files/dkim/mailing-list.private' exists. Delete to regenerate. Skipping..."
+if [ -f "$mailer_files/dkim/mailing-list.private" ]; then
+  echo "File '$mailer_files/dkim/mailing-list.private' exists. Delete to regenerate. Skipping..."
 else
   echo "Generating DKIM keys for 'mailing-list._domainkey.6k2.ru'..."
   opendkim-genkey --selector=mailing-list --domain=6k2.ru \
                   --nosubdomains --restrict \
-                  --directory="$smtp_files/dkim"
+                  --directory="$mailer_files/dkim"
   # Set ownership so that opendkim user and group:
-  chown 100:101 "$smtp_files/dkim/mailing-list.private" \
-                "$smtp_files/dkim/mailing-list.txt"
+  chown 100:101 "$mailer_files/dkim/mailing-list.private" \
+                "$mailer_files/dkim/mailing-list.txt"
 fi
 
 
