@@ -25,7 +25,7 @@ services:
       
       traefik.http.routers.traefik-static.priority: 100
       traefik.http.routers.traefik-static.service: api@internal
-      traefik.http.routers.traefik-static.rule: >
+      traefik.http.routers.traefik-static.rule: >-
         Host(`traefik.6k2.ru`) && (
         PathPrefix(`/static/`) ||
         PathRegexp(`/manifest\.json$`) || 
@@ -34,7 +34,7 @@ services:
       traefik.http.routers.traefik.priority: 1
       traefik.http.routers.traefik.service: api@internal
       traefik.http.routers.traefik.middlewares: ip-whitelist@file, auth@file
-      traefik.http.routers.traefik.rule: >
+      traefik.http.routers.traefik.rule: >-
         Host(`traefik.6k2.ru`)
     deploy:
       resources:
@@ -69,7 +69,7 @@ services:
     expose: [ 9091 ]    # Web front-end and ForwardAuth endpoint
     labels:
       traefik.enable: 'true'
-      traefik.http.routers.authelia.rule: >
+      traefik.http.routers.authelia.rule: >-
         Host(`authelia.6k2.ru`) ||
         Host(`xn--c1akhkc.xn--62-2lc.xn--p1ai`) ||
         Host(`xn--c1akhkc.xn--b1ayja.xn--p1ai`)
@@ -102,7 +102,7 @@ services:
     expose: [ 9000 ]    # Web front-end and ForwardAuth endpoint
     labels:
       traefik.enable: 'true'
-      traefik.http.routers.authentik.rule: >
+      traefik.http.routers.authentik.rule: >-
         Host(`authentik.6k2.ru`) ||
         Host(`auth.6k2.ru`)
     depends_on:
@@ -154,13 +154,13 @@ services:
 
       # Publicly allow redirects to /auth for OIDC authentication flow
       traefik.http.routers.dex-auth.priority: 100
-      traefik.http.routers.dex-auth.rule: >
+      traefik.http.routers.dex-auth.rule: >-
         Host(`dex.6k2.ru`) && ( Path(`/auth`) || PathPrefix(`/auth/`) )
 
       # Everything else should only be accessed from within Authentik
       traefik.http.routers.dex.priority: 1
       traefik.http.routers.dex.middlewares: ip-whitelist@file
-      traefik.http.routers.dex.rule: >
+      traefik.http.routers.dex.rule: >-
         Host(`dex.6k2.ru`)
 
     deploy:
@@ -192,7 +192,7 @@ services:
     labels:
       traefik.enable: 'true'
       traefik.http.routers.lldap.middlewares: ip-whitelist@file
-      traefik.http.routers.lldap.rule: >
+      traefik.http.routers.lldap.rule: >-
         Host(`users.6k2.ru`)
     deploy:
       resources:
@@ -295,7 +295,7 @@ services:
     labels:
       traefik.enable: 'true'
       traefik.http.routers.glances.middlewares: auth@file
-      traefik.http.routers.glances.rule: >
+      traefik.http.routers.glances.rule: >-
         Host(`glances.6k2.ru`)
     deploy:
       resources:
@@ -312,7 +312,7 @@ services:
       - ./static/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     labels:
       traefik.enable: 'true'
-      traefik.http.routers.static.rule: >
+      traefik.http.routers.static.rule: >-
         Host(`static.6k2.ru`)
     deploy:
       resources:
@@ -333,12 +333,12 @@ services:
       # Private area requires authentication
       traefik.http.routers.oss-2021-private.priority: 100
       traefik.http.routers.oss-2021-private.middlewares: auth@file
-      traefik.http.routers.oss-2021-private.rule: >
+      traefik.http.routers.oss-2021-private.rule: >-
         Host(`2021.oss.6k2.ru`) && ( Path(`/-`) || PathPrefix(`/-/`) )
 
       # Public results don't require authentication
       traefik.http.routers.oss-2021.priority: 1
-      traefik.http.routers.oss-2021.rule: >
+      traefik.http.routers.oss-2021.rule: >-
         Host(`2021.oss.6k2.ru`) || 
         Host(`2021.xn--n1aga.xn--62-2lc.xn--p1ai`) ||
         Host(`2021.xn--b1ayja.xn--p1ai`)
@@ -361,12 +361,12 @@ services:
       # Private area requires authentication
       traefik.http.routers.oss-2023-private.priority: 100
       traefik.http.routers.oss-2023-private.middlewares: auth@file
-      traefik.http.routers.oss-2023-private.rule: >
+      traefik.http.routers.oss-2023-private.rule: >-
         ( Host(`oss.6k2.ru`) || Host(`2023.oss.6k2.ru`) ) && ( Path(`/-`) || PathPrefix(`/-/`) )
 
       # Public results don't require authentication
       traefik.http.routers.oss-2023.priority: 1
-      traefik.http.routers.oss-2023.rule: >
+      traefik.http.routers.oss-2023.rule: >-
         Host(`oss.6k2.ru`) || 
         Host(`2023.oss.6k2.ru`) || 
         Host(`xn--n1aga.xn--62-2lc.xn--p1ai`) ||
@@ -392,12 +392,12 @@ services:
       # Private area requires authentication
       traefik.http.routers.osch-2024-private.priority: 100
       traefik.http.routers.osch-2024-private.middlewares: auth@file
-      traefik.http.routers.osch-2024-private.rule: >
+      traefik.http.routers.osch-2024-private.rule: >-
         Host(`2024.os4.6k2.ru`) && ( Path(`/-`) || PathPrefix(`/-/`) )
 
       # Public results don't require authentication
       traefik.http.routers.osch-2024.priority: 1
-      traefik.http.routers.osch-2024.rule: >
+      traefik.http.routers.osch-2024.rule: >-
         Host(`2024.os4.6k2.ru`) || 
         Host(`2024.xn--n1ags.xn--62-2lc.xn--p1ai`)
     deploy:
@@ -419,12 +419,12 @@ services:
       # Private area requires authentication
       traefik.http.routers.osch-2025-private.priority: 100
       traefik.http.routers.osch-2025-private.middlewares: auth@file
-      traefik.http.routers.osch-2025-private.rule: >
+      traefik.http.routers.osch-2025-private.rule: >-
         ( Host(`os4.6k2.ru`) || Host(`2025.os4.6k2.ru`) ) && ( Path(`/-`) || PathPrefix(`/-/`) )
 
       # Public results don't require authentication
       traefik.http.routers.osch-2025.priority: 1
-      traefik.http.routers.osch-2025.rule: >
+      traefik.http.routers.osch-2025.rule: >-
         Host(`os4.6k2.ru`) || 
         Host(`2025.os4.6k2.ru`) || 
         Host(`xn--n1ags.xn--62-2lc.xn--p1ai`) ||
@@ -447,7 +447,7 @@ services:
     labels:
       traefik.enable: 'true'
       traefik.http.routers.utility-bills.middlewares: auth@file
-      traefik.http.routers.utility-bills.rule: >
+      traefik.http.routers.utility-bills.rule: >-
         Host(`bills.6k2.ru`)
     deploy:
       resources:
@@ -466,7 +466,7 @@ services:
       com.centurylinklabs.watchtower.enable: 'true'
       traefik.enable: 'true'
       traefik.http.routers.alt-chat.middlewares: auth@file
-      traefik.http.routers.alt-chat.rule: >
+      traefik.http.routers.alt-chat.rule: >-
         Host(`a4.6k2.ru`)
     deploy:
       resources:
@@ -488,7 +488,7 @@ services:
       traefik.enable: 'true'
       traefik.tcp.routers.mailer.entrypoints: smtps
       traefik.tcp.routers.mailer.tls.certResolver: letsencrypt
-      traefik.tcp.routers.mailer.rule: >
+      traefik.tcp.routers.mailer.rule: >-
         HostSNI(`smtp.6k2.ru`)
     deploy:
       resources:
