@@ -477,16 +477,9 @@ services:
     container_name: mailer
     image: mwader/postfix-relay:1.2
     restart: unless-stopped
-    env_file: .env
-    environment:
-      SASL_Passwds: /etc/postfix/sasl/sasl_passwds
-      POSTFIX_myhostname: smtp.6k2.ru
-      POSTFIX_mydomain: 6k2.ru
-      POSTFIX_myorigin: $mydomain
-      POSTFIX_smtpd_sasl_auth_enable: yes
-      POSTFIX_smtpd_sasl_security_options: noanonymous
-      POSTFIX_smtpd_relay_restrictions: permit_sasl_authenticated,reject
-      OPENDKIM_DOMAINS: 6k2.ru=mailing-list
+    env_file: 
+      - .env
+      - ./mailer/.env
     volumes:
       - /data/secrets/mailer/dkim:/etc/opendkim/keys/6k2.ru:ro
       - /data/secrets/mailer/auth/passwords.hashed:/etc/postfix/sasl/sasl_passwds:ro
@@ -494,9 +487,9 @@ services:
     labels:
       traefik.enable: 'true'
       traefik.tcp.routers.mailer.entrypoints: smtps
-      traefik.tcp.routers.mailer.rule: HostSNI(`*`)
       traefik.tcp.routers.mailer.tls.certResolver: letsencrypt
-      traefik.tcp.routers.mailer.tls.domains[0].main: smtp.6k2.ru
+      traefik.tcp.routers.mailer.rule: >
+        HostSNI(`smtp.6k2.ru`)
     deploy:
       resources:
         limits:
