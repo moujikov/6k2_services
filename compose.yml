@@ -484,6 +484,7 @@ services:
     volumes:
       - /data/secrets/mailer/dkim:/etc/opendkim/keys/6k2.ru:ro
       - /data/secrets/mailer/auth/passwords.hashed:/etc/postfix/sasl/sasl_passwds:ro
+      - ./mailer/smtpd.conf:/etc/postfix/sasl/smtpd.conf:ro
     expose: [ 25 ]    # SMTP endpoint
     labels:
       traefik.enable: 'true'

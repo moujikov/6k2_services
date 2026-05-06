@@ -6,7 +6,7 @@ api:
   disableDashboardAd: true
 
 log:
-  level: DEBUG
+  level: WARN
 
 # accessLog:
 #   format: json
