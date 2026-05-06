@@ -489,7 +489,7 @@ services:
       traefik.tcp.routers.mailer.entrypoints: smtps
       traefik.tcp.routers.mailer.rule: HostSNI(`*`)   # In case client sends no explicit SNI
       traefik.tcp.routers.mailer.tls.certResolver: letsencrypt
-      traefik.tcp.routers.mailer.tls.domains[0].main: 6k2.ru
+      traefik.tcp.routers.mailer.tls.domains[0].main: smtp.6k2.ru
     deploy:
       resources:
         limits:
