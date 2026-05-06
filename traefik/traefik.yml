@@ -75,7 +75,7 @@ entryPoints:
     http:
       tls:
         certResolver: letsencrypt
-        domains: [ 6k2.ru ]
+        domains: [ smtp.6k2.ru ]
 
 
 certificatesResolvers:
