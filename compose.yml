@@ -492,6 +492,8 @@ services:
       traefik.enable: 'true'
       traefik.tcp.routers.mailer.entrypoints: smtps
       traefik.tcp.routers.mailer.rule: HostSNI(`*`)
+      traefik.tcp.routers.mailer.tls.certResolver: letsencrypt
+      traefik.tcp.routers.mailer.tls.domains: smtp.6k2.ru
     deploy:
       resources:
         limits:

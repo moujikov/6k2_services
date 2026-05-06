@@ -72,11 +72,6 @@ entryPoints:
 
   smtps:
     address: ':465'
-    http:
-      tls:
-        certResolver: letsencrypt
-        domains:
-          - main: smtp.6k2.ru
 
 
 certificatesResolvers:
