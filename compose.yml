@@ -104,7 +104,8 @@ services:
       traefik.enable: 'true'
       traefik.http.routers.authentik.rule: >-
         Host(`authentik.6k2.ru`) ||
-        Host(`auth.6k2.ru`)
+        Host(`auth.6k2.ru`) ||
+        Host(`6k2.ru`)
     depends_on:
       - postgres
     deploy:
