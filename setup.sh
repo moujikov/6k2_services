@@ -151,6 +151,10 @@ smtp_files="$secrets/smtp"
 install -m 0755 -d "$smtp_files"
 install -m 0700 -d "$smtp_files/auth"
 
+mailbox_files="$secrets/mailbox"
+install -m 0755 -d "$mailbox_files"
+install -m 0700 -d "$mailbox_files/auth"
+
 mailer_files="$secrets/mailer"
 install -m 0755 -d "$mailer_files"
 install -m 0700 -d "$mailer_files/auth"
@@ -188,6 +192,12 @@ if [ ! -f "$services/.tokens-provided" ]; then
   echo
   if [ -n "$SMTP_PASSWORD_AUTHELIA" ]; then
     set_secret "$smtp_files/auth/authelia_password" "$SMTP_PASSWORD_AUTHELIA"
+  fi
+
+  read -s -p "Provide IMAP password for DMARC reports mailbox (empty to skip): " DMARC_MAILBOX_PASSWORD
+  echo
+  if [ -n "$DMARC_MAILBOX_PASSWORD" ]; then
+    set_secret "$mailbox_files/auth/dmarc.env" "IMAP_PASSWORD=$DMARC_MAILBOX_PASSWORD"
   fi
 
   touch "$services/.tokens-provided"

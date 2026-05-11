@@ -47,15 +47,9 @@ services:
     image: authelia/authelia:4
     restart: unless-stopped
     user: 1000:1000
-    env_file: .env
-    environment:
-      AUTHELIA_STORAGE_POSTGRES_PASSWORD_FILE: /run/secrets/db_password_authelia
-      AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: /run/secrets/authelia_storage_encryption_key
-      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE: /run/secrets/lldap_password_authelia
-      AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE: /run/secrets/smtp_password_authelia
-      AUTHELIA_SESSION_SECRET_FILE: /run/secrets/authelia_session_secret
-      AUTHELIA_SESSION_REDIS_PASSWORD_FILE: /run/secrets/redis_password
-      AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET_FILE: /run/secrets/authelia_reset_password_secret
+    env_file: 
+      - .env
+      - ./authelia/.env
     volumes:
       - ./authelia:/config:ro
     secrets:
@@ -90,7 +84,7 @@ services:
     command: server
     env_file: 
       - .env
-      - authentik/.env
+      - ./authentik/.env
     environment:
       AUTHENTIK_LOG_LEVEL: ${LOG_LEVEL:-warning}
     volumes:
@@ -119,7 +113,7 @@ services:
     command: worker
     env_file: 
       - .env
-      - authentik/.env
+      - ./authentik/.env
     environment:
       AUTHENTIK_LOG_LEVEL: ${LOG_LEVEL:-warning}
     volumes:
@@ -513,6 +507,29 @@ services:
       resources:
         limits:
           memory: 256mb
+
+  dmarc:
+    container_name: dmarc
+    image: ghcr.io/cry-inc/dmarc-report-viewer:2
+    restart: unless-stopped
+    user: 1000:1000
+    env_file: 
+      - .env
+      - /data/secrets/mailbox/auth/dmarc.env
+    environment:
+      IMAP_HOST: imap.yandex.ru
+      IMAP_USER: 6k2.ru/andrey.muzhikov/postmaster
+      IMAP_FOLDER: dmarc
+      HTTP_SERVER_PASSWORD:
+    labels:
+      traefik.enable: 'true'
+      traefik.http.routers.dmarc.middlewares: auth@file
+      traefik.http.routers.dmarc.rule: >-
+        Host(`dmarc.6k2.ru`)
+    deploy:
+      resources:
+        limits:
+          memory: 128mb
 
 
 volumes:
