@@ -520,7 +520,7 @@ services:
       IMAP_HOST: imap.yandex.ru
       IMAP_USER: 6k2.ru/andrey.muzhikov/postmaster
       IMAP_FOLDER: dmarc
-      HTTP_SERVER_PASSWORD:
+      HTTP_SERVER_PASSWORD: ''
     labels:
       traefik.enable: 'true'
       traefik.http.routers.dmarc.middlewares: auth@file
