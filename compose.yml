@@ -300,6 +300,7 @@ services:
     image: moujikov/6k2_static
     restart: unless-stopped
     labels:
+      com.centurylinklabs.watchtower.enable: 'true'
       traefik.enable: 'true'
       traefik.http.routers.static.rule: >-
         Host(`static.6k2.ru`)
