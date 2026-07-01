@@ -297,11 +297,8 @@ services:
 
   static:
     container_name: static
-    image: nginx:1.29-alpine-slim
+    image: moujikov/6k2_static
     restart: unless-stopped
-    volumes:
-      - ./static/web:/web:ro
-      - ./static/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
     labels:
       traefik.enable: 'true'
       traefik.http.routers.static.rule: >-
