@@ -1,5 +1,26 @@
 name: 6k2-services
 
+x-logging: &logging
+  driver: "json-file"
+  options:
+    max-size: "100m"
+    
+x-resource-s: &resources-S
+  resources:
+    limits:
+      memory: 128mb
+      
+x-resource-m: &resources-M
+  resources:
+    limits:
+      memory: 512mb
+      
+x-resource-l: &resources-L
+  resources:
+    limits:
+      memory: 2gb
+
+
 services:
   traefik:
     container_name: traefik
@@ -36,10 +57,8 @@ services:
       traefik.http.routers.traefik.middlewares: ip-whitelist@file, auth@file
       traefik.http.routers.traefik.rule: >-
         Host(`traefik.6k2.ru`)
-    deploy:
-      resources:
-        limits:
-          memory: 128mb
+    logging: *logging
+    deploy: *resources-S
 
 
   authelia:
@@ -71,10 +90,8 @@ services:
       - postgres
       - redis
       - lldap
-    deploy:
-      resources:
-        limits:
-          memory: 128mb
+    logging: *logging
+    deploy: *resources-S
 
 
   authentik:
@@ -100,10 +117,8 @@ services:
         Host(`auth.6k2.ru`)
     depends_on:
       - postgres
-    deploy:
-      resources:
-        limits:
-          memory: 2gb
+    logging: *logging
+    deploy: *resources-L
 
 
   authentik-worker:
@@ -124,10 +139,8 @@ services:
       - authentik_admin_password
     depends_on:
       - postgres
-    deploy:
-      resources:
-        limits:
-          memory: 2gb
+    logging: *logging
+    deploy: *resources-L
 
 
   dex:
@@ -155,10 +168,8 @@ services:
       traefik.http.routers.dex.rule: >-
         Host(`dex.6k2.ru`)
 
-    deploy:
-      resources:
-        limits:
-          memory: 128mb
+    logging: *logging
+    deploy: *resources-S
 
 
   lldap:
@@ -186,10 +197,8 @@ services:
       traefik.http.routers.lldap.middlewares: ip-whitelist@file
       traefik.http.routers.lldap.rule: >-
         Host(`users.6k2.ru`)
-    deploy:
-      resources:
-        limits:
-          memory: 128mb
+    logging: *logging
+    deploy: *resources-S
 
 
   postgres:
@@ -214,11 +223,8 @@ services:
       retries: 3
       start_period: 10s
       start_interval: 1s
-    deploy:
-      resources:
-        limits:
-          memory: 512mb
-
+    logging: *logging
+    deploy: *resources-M
 
   redis:
     container_name: redis
@@ -241,10 +247,8 @@ services:
       retries: 3
       start_period: 10s
       start_interval: 1s
-    deploy:
-      resources:
-        limits:
-          memory: 512mb
+    logging: *logging
+    deploy: *resources-M
 
 
   watchtower:
@@ -260,10 +264,8 @@ services:
     volumes:
       - /usr/local/share/6k2_services/.docker/config.json:/config.json:ro
       - /var/run/docker.sock:/var/run/docker.sock
-    deploy:
-      resources:
-        limits:
-          memory: 128mb
+    logging: *logging
+    deploy: *resources-S
 
 
   glances:
@@ -289,10 +291,8 @@ services:
       traefik.http.routers.glances.middlewares: auth@file
       traefik.http.routers.glances.rule: >-
         Host(`glances.6k2.ru`)
-    deploy:
-      resources:
-        limits:
-          memory: 256mb
+    logging: *logging
+    deploy: *resources-M
 
 
   static:
@@ -304,10 +304,8 @@ services:
       traefik.enable: 'true'
       traefik.http.routers.static.rule: >-
         Host(`static.6k2.ru`)
-    deploy:
-      resources:
-        limits:
-          memory: 128mb
+    logging: *logging
+    deploy: *resources-S
 
 
   frontend:
@@ -323,10 +321,8 @@ services:
       traefik.http.routers.frontend.middlewares: auth@file
       traefik.http.routers.frontend.rule: >-
         Host(`6k2.ru`)
-    deploy:
-      resources:
-        limits:
-          memory: 128mb
+    logging: *logging
+    deploy: *resources-S
 
 
   oss-2021:
@@ -351,10 +347,8 @@ services:
         Host(`2021.oss.6k2.ru`) || 
         Host(`2021.xn--n1aga.xn--62-2lc.xn--p1ai`) ||
         Host(`2021.xn--b1ayja.xn--p1ai`)
-    deploy:
-      resources:
-        limits:
-          memory: 128mb
+    logging: *logging
+    deploy: *resources-S
 
 
   oss-2023:
@@ -382,10 +376,8 @@ services:
         Host(`2023.xn--n1aga.xn--62-2lc.xn--p1ai`) || 
         Host(`xn--b1ayja.xn--p1ai`) || 
         Host(`2023.xn--b1ayja.xn--p1ai`)
-    deploy:
-      resources:
-        limits:
-          memory: 128mb
+    logging: *logging
+    deploy: *resources-S
 
 
   osch-2024:
@@ -409,10 +401,8 @@ services:
       traefik.http.routers.osch-2024.rule: >-
         Host(`2024.os4.6k2.ru`) || 
         Host(`2024.xn--n1ags.xn--62-2lc.xn--p1ai`)
-    deploy:
-      resources:
-        limits:
-          memory: 128mb
+    logging: *logging
+    deploy: *resources-S
 
 
   osch-2025:
@@ -438,10 +428,8 @@ services:
         Host(`2025.os4.6k2.ru`) || 
         Host(`xn--n1ags.xn--62-2lc.xn--p1ai`) ||
         Host(`2025.xn--n1ags.xn--62-2lc.xn--p1ai`)
-    deploy:
-      resources:
-        limits:
-          memory: 128mb
+    logging: *logging
+    deploy: *resources-S
 
 
   utility-bills:
@@ -458,10 +446,8 @@ services:
       traefik.http.routers.utility-bills.middlewares: auth@file
       traefik.http.routers.utility-bills.rule: >-
         Host(`bills.6k2.ru`)
-    deploy:
-      resources:
-        limits:
-          memory: 256mb
+    logging: *logging
+    deploy: *resources-M
 
 
   alt-chat:
@@ -477,10 +463,8 @@ services:
       traefik.http.routers.alt-chat.middlewares: auth@file
       traefik.http.routers.alt-chat.rule: >-
         Host(`a4.6k2.ru`)
-    deploy:
-      resources:
-        limits:
-          memory: 128mb
+    logging: *logging
+    deploy: *resources-S
 
 
   mailer:
@@ -501,10 +485,9 @@ services:
       traefik.tcp.routers.mailer.tls.certResolver: letsencrypt
       traefik.tcp.routers.mailer.rule: >-
         HostSNI(`smtp.6k2.ru`)
-    deploy:
-      resources:
-        limits:
-          memory: 256mb
+    logging: *logging
+    deploy: *resources-M
+
 
   dmarc:
     container_name: dmarc
@@ -524,10 +507,8 @@ services:
       traefik.http.routers.dmarc.middlewares: auth@file
       traefik.http.routers.dmarc.rule: >-
         Host(`dmarc.6k2.ru`)
-    deploy:
-      resources:
-        limits:
-          memory: 128mb
+    logging: *logging
+    deploy: *resources-S
 
 
 volumes:
