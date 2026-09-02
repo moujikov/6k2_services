@@ -47,31 +47,31 @@ entryPoints:
     http:
       tls:
         certResolver: letsencrypt
-        domains:
+        # domains:
 
-          - main: 6k2.ru                            # Domain: 6k2.ru
-            sans:                                   # Subdomains:
-              - '*.6k2.ru'                          #   *.6k2.ru
-              - '*.oss.6k2.ru'                      #   *.oss.6k2.ru
-              - '*.osch.6k2.ru'                     #   *.osch.6k2.ru
-              - '*.os4.6k2.ru'                      #   *.os4.6k2.ru
+        #   - main: 6k2.ru                            # Domain: 6k2.ru
+        #     sans:                                   # Subdomains:
+        #       - '*.6k2.ru'                          #   *.6k2.ru
+        #       - '*.oss.6k2.ru'                      #   *.oss.6k2.ru
+        #       - '*.osch.6k2.ru'                     #   *.osch.6k2.ru
+        #       - '*.os4.6k2.ru'                      #   *.os4.6k2.ru
 
-          - main: var62.ru                          # Domain: var62.ru
-            sans:                                   # Subdomains:
-              - '*.var62.ru'                        #   *.var62.ru
-              - '*.oss.var62.ru'                    #   *.oss.var62.ru
-              - '*.osch.var62.ru'                   #   *.osch.var62.ru
-              - '*.os4.var62.ru'                    #   *.os4.var62.ru
+        #   - main: var62.ru                          # Domain: var62.ru
+        #     sans:                                   # Subdomains:
+        #       - '*.var62.ru'                        #   *.var62.ru
+        #       - '*.oss.var62.ru'                    #   *.oss.var62.ru
+        #       - '*.osch.var62.ru'                   #   *.osch.var62.ru
+        #       - '*.os4.var62.ru'                    #   *.os4.var62.ru
 
-          - main: xn--62-2lc.xn--p1ai               # Domain: 6к2.рф
-            sans:                                   # Subdomains:
-              - '*.xn--62-2lc.xn--p1ai'             #   *.6к2.рф
-              - '*.xn--n1aga.xn--62-2lc.xn--p1ai'   #   *.осс.6к2.рф
-              - '*.xn--n1ags.xn--62-2lc.xn--p1ai'   #   *.осч.6к2.рф
+        #   - main: xn--62-2lc.xn--p1ai               # Domain: 6к2.рф
+        #     sans:                                   # Subdomains:
+        #       - '*.xn--62-2lc.xn--p1ai'             #   *.6к2.рф
+        #       - '*.xn--n1aga.xn--62-2lc.xn--p1ai'   #   *.осс.6к2.рф
+        #       - '*.xn--n1ags.xn--62-2lc.xn--p1ai'   #   *.осч.6к2.рф
 
-          - main: xn--b1ayja.xn--p1ai               # Domain: восс.рф
-            sans:                                   # Subdomains:
-              - '*.xn--b1ayja.xn--p1ai'             #   *.восс.рф
+        #   - main: xn--b1ayja.xn--p1ai               # Domain: восс.рф
+        #     sans:                                   # Subdomains:
+        #       - '*.xn--b1ayja.xn--p1ai'             #   *.восс.рф
 
   smtps:
     address: ':465'
@@ -82,8 +82,8 @@ certificatesResolvers:
     acme:
       email: admin@6k2.ru
       storage: /usr/local/share/traefik/certs/acme.json
-      dnsChallenge:
-        provider: timewebcloud
+      # dnsChallenge:
+      #   provider: timewebcloud
       httpChallenge:
         entryPoint: web
 
